@@ -1,0 +1,2834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Dunia Wujud Zat - IPAS Kelas 3 SD</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Nunito & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Ikon Edukasi -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti untuk Efek Kemenangan -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #fef9c3 50%, #dcfce7 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+        h1, h2, h3, .font-title {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Animasi Kustom Ramah Anak */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        @keyframes steam-rise {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-70px) scale(1.4); opacity: 0; }
+        }
+        @keyframes drop-fall {
+            0% { transform: translateY(0); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: translateY(55px); opacity: 0; }
+        }
+        @keyframes crystal-sparkle {
+            0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.4; }
+            50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+        }
+
+        .animate-float { animation: float 3.5s ease-in-out infinite; }
+        .animate-float-delay { animation: float 3.5s ease-in-out 1.5s infinite; }
+        .animate-pulse-soft { animation: pulse-soft 2.5s ease-in-out infinite; }
+        .animate-wiggle:hover { animation: wiggle 0.5s ease-in-out infinite; }
+
+        /* Efek Tombol 3D Ceria */
+        .btn-3d {
+            transition: all 0.15s ease;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.18);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+        }
+
+        /* Card Menu 3D */
+        .menu-card {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1), 0 6px 0 rgba(0,0,0,0.08);
+        }
+        .menu-card:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        /* Drag and Drop Styling */
+        .draggable-item {
+            cursor: grab;
+            touch-action: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(1.08);
+        }
+        .drop-zone.drag-over {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 4px #facc15;
+        }
+
+        /* Print Styling untuk LKPD & Hasil Evaluasi */
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            #app-header, #audio-floating-bar { display: none !important; }
+            .print-container {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                padding: 10px !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            input, textarea, select {
+                border: 1px solid #999 !important;
+                background: transparent !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col justify-between">
+
+    <!-- ==================== HEADER NAVIGASI ATAS ==================== -->
+    <header id="app-header" class="hidden sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-sky-400 shadow-md px-3 py-2 md:px-6 no-print">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Kiri: Tombol Beranda & Judul -->
+            <div class="flex items-center gap-2 md:gap-3">
+                <button onclick="navigateTo('menu')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold px-3 py-2 rounded-2xl flex items-center gap-2 text-sm md:text-base" title="Menu Utama">
+                    <i class="fas fa-home"></i>
+                    <span class="hidden sm:inline">Menu Utama</span>
+                </button>
+                <div class="hidden lg:block">
+                    <h1 class="text-base font-extrabold text-sky-700 leading-tight">PETUALANGAN DUNIA WUJUD ZAT</h1>
+                    <p class="text-xs text-slate-500 font-semibold">IPAS Kelas 3 SD • SD Negeri 3 Kelaten</p>
+                </div>
+            </div>
+
+            <!-- Tengah: Progress Belajar & Bintang -->
+            <div class="flex items-center gap-3 bg-amber-50 border-2 border-amber-300 px-3 py-1.5 rounded-2xl">
+                <div class="flex items-center gap-1 text-amber-500 font-black text-base md:text-lg" title="Bintang Penghargaan">
+                    <i class="fas fa-star text-amber-400 drop-shadow"></i>
+                    <span id="star-count">0</span>
+                </div>
+                <div class="h-5 w-0.5 bg-amber-200"></div>
+                <div class="flex flex-col w-24 sm:w-36">
+                    <div class="flex justify-between text-[11px] font-bold text-slate-600">
+                        <span>Progres Belajar</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5 mt-0.5 overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-emerald-400 to-sky-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kanan: Kontrol Suara, Musik & Bantuan -->
+            <div class="flex items-center gap-1.5 md:gap-2">
+                <button id="btn-music-toggle" onclick="toggleBackgroundMusic()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white p-2.5 rounded-2xl text-sm font-bold flex items-center gap-1.5" title="Musik Latar">
+                    <i id="music-icon" class="fas fa-music"></i>
+                    <span class="hidden md:inline text-xs">Musik</span>
+                </button>
+                <button onclick="openAudioSettingsModal()" class="btn-3d bg-orange-400 hover:bg-orange-500 text-white p-2.5 rounded-2xl text-sm font-bold" title="Pengaturan Suara & Volume">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+                <button onclick="openHelpModal()" class="btn-3d bg-purple-500 hover:bg-purple-600 text-white p-2.5 rounded-2xl text-sm font-bold" title="Petunjuk Penggunaan">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== PANEL KONTROL NARASI SUARA (TTS) ==================== -->
+    <div id="audio-floating-bar" class="hidden fixed bottom-4 right-4 z-50 bg-white/95 backdrop-blur border-4 border-orange-400 rounded-3xl shadow-2xl p-2.5 flex items-center gap-2 no-print">
+        <div class="bg-orange-100 text-orange-600 w-9 h-9 rounded-full flex items-center justify-center animate-pulse">
+            <i class="fas fa-volume-up"></i>
+        </div>
+        <div class="text-xs font-bold text-slate-700 max-w-[120px] truncate" id="tts-status-text">Narator Aktif</div>
+        <button onclick="pauseResumeSpeech()" id="btn-tts-pause" class="bg-amber-400 hover:bg-amber-500 text-white w-8 h-8 rounded-full flex items-center justify-center shadow" title="Jeda / Lanjut Suara">
+            <i class="fas fa-pause text-xs"></i>
+        </button>
+        <button onclick="replayLastSpeech()" class="bg-sky-500 hover:bg-sky-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow" title="Ulangi Suara">
+            <i class="fas fa-redo text-xs"></i>
+        </button>
+        <button onclick="stopSpeech()" class="bg-rose-500 hover:bg-rose-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow" title="Hentikan Suara">
+            <i class="fas fa-stop text-xs"></i>
+        </button>
+    </div>
+
+    <!-- ==================== KONTEN UTAMA DINAMIS ==================== -->
+    <main id="main-container" class="flex-grow max-w-7xl w-full mx-auto p-3 md:p-6">
+        <!-- Halaman akan dirender secara dinamis oleh JavaScript -->
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="text-center py-3 text-xs md:text-sm text-slate-600 font-semibold no-print">
+        Media Pembelajaran Interaktif IPAS Kelas 3 SD (Fase B) • Dikembangkan oleh <span class="text-sky-700 font-bold">Oky Susanti, S.Pd.</span> • SD Negeri 3 Kelaten
+    </footer>
+
+    <!-- ==================== MODAL PETUNJUK PENGGUNAAN ==================== -->
+    <div id="help-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white border-4 border-sky-400 rounded-3xl max-w-xl w-full p-6 shadow-2xl relative animate-pulse-soft" style="animation: none;">
+            <button onclick="closeModal('help-modal')" class="absolute top-4 right-4 bg-rose-500 hover:bg-rose-600 text-white w-9 h-9 rounded-full font-bold shadow">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-2xl">
+                    <i class="fas fa-compass"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-extrabold text-sky-700">Petunjuk Penggunaan MPI</h3>
+                    <p class="text-xs text-slate-500 font-bold">Cara Belajar di Laboratorium Ilmuwan Cilik</p>
+                </div>
+            </div>
+            <div class="space-y-3 text-sm text-slate-700 max-h-[60vh] overflow-y-auto pr-1">
+                <div class="flex items-start gap-3 bg-sky-50 p-3 rounded-2xl">
+                    <span class="bg-sky-500 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span>
+                    <p>Klik tombol <b>MULAI BELAJAR</b> di halaman depan untuk masuk ke Menu Utama.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-amber-50 p-3 rounded-2xl">
+                    <span class="bg-amber-500 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span>
+                    <p>Pelajari <b>Materi</b>, coba percobaan di <b>Simulasi</b> dan <b>Praktikum</b>, lalu bermain di menu <b>Game</b>.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-emerald-50 p-3 rounded-2xl">
+                    <span class="bg-emerald-500 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">3</span>
+                    <p>Klik ikon <b>Speaker (<i class="fas fa-volume-up text-orange-500"></i>)</b> di setiap halaman untuk mendengarkan suara Ibu Guru / Narator membacakan teks.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-orange-50 p-3 rounded-2xl">
+                    <span class="bg-orange-500 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center shrink-0">4</span>
+                    <p>Kerjakan <b>LKPD</b> dan <b>Evaluasi</b> untuk mengumpulkan Bintang Penghargaan dan mencetak hasil belajarmu!</p>
+                </div>
+            </div>
+            <div class="mt-5 flex flex-wrap justify-between items-center gap-2">
+                <button onclick="speakText('Halo anak-anak hebat! Selamat datang di Petualangan Dunia Wujud Zat. Klik tombol Mulai Belajar, lalu pilih menu Materi, Simulasi, Praktikum, Game, LKPD, atau Evaluasi. Gunakan ikon speaker jika ingin mendengarkan penjelasan. Selamat belajar!')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2.5 rounded-2xl flex items-center gap-2 text-sm">
+                    <i class="fas fa-volume-up"></i> Dengarkan Petunjuk
+                </button>
+                <button onclick="closeModal('help-modal')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-2.5 rounded-2xl text-sm">
+                    Saya Mengerti!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL PENGATURAN VOLUME AUDIO ==================== -->
+    <div id="audio-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div class="bg-white border-4 border-orange-400 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal('audio-modal')" class="absolute top-4 right-4 bg-rose-500 hover:bg-rose-600 text-white w-9 h-9 rounded-full font-bold shadow">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-xl font-extrabold text-orange-600 mb-4 flex items-center gap-2">
+                <i class="fas fa-sliders-h"></i> Pengaturan Suara & Musik
+            </h3>
+            <div class="space-y-4">
+                <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200">
+                    <div class="flex justify-between font-bold text-sm text-emerald-800 mb-1">
+                        <span><i class="fas fa-music mr-1"></i> Volume Musik Latar</span>
+                        <span id="bgm-vol-label">50%</span>
+                    </div>
+                    <input type="range" id="bgm-volume-slider" min="0" max="100" value="50" oninput="updateVolumes()" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200">
+                    <div class="flex justify-between font-bold text-sm text-sky-800 mb-1">
+                        <span><i class="fas fa-bell mr-1"></i> Volume Efek Suara (SFX)</span>
+                        <span id="sfx-vol-label">80%</span>
+                    </div>
+                    <input type="range" id="sfx-volume-slider" min="0" max="100" value="80" oninput="updateVolumes()" class="w-full accent-sky-500 cursor-pointer">
+                </div>
+                <div class="bg-orange-50 p-4 rounded-2xl border-2 border-orange-200">
+                    <div class="flex justify-between font-bold text-sm text-orange-800 mb-1">
+                        <span><i class="fas fa-comment-dots mr-1"></i> Volume Suara Narator</span>
+                        <span id="tts-vol-label">100%</span>
+                    </div>
+                    <input type="range" id="tts-volume-slider" min="0" max="100" value="100" oninput="updateVolumes()" class="w-full accent-orange-500 cursor-pointer">
+                </div>
+                <div id="tts-support-notice" class="text-xs text-slate-600 bg-slate-100 p-2.5 rounded-xl font-semibold">
+                    Status Suara Browser: Mengecek dukungan suara Bahasa Indonesia...
+                </div>
+            </div>
+            <div class="mt-5 text-right">
+                <button onclick="closeModal('audio-modal')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-6 py-2 rounded-2xl text-sm">
+                    Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL NOTIFIKASI / UMPAN BALIK KUSTOM ==================== -->
+    <div id="feedback-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+        <div id="feedback-card" class="bg-white border-4 border-emerald-400 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center">
+            <div id="feedback-icon" class="text-6xl mb-3 animate-bounce">🌟</div>
+            <h3 id="feedback-title" class="text-2xl font-black text-emerald-600 mb-2">HEBAT!</h3>
+            <p id="feedback-message" class="text-slate-700 font-semibold text-base mb-5">Jawabanmu benar sekali!</p>
+            <button onclick="closeModal('feedback-modal')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-8 py-3 rounded-2xl text-base">
+                Lanjutkan
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== SCRIPT APLIKASI MPI ==================== -->
+    <script>
+        /* =========================================================================
+           1. STATE APLIKASI & PENYIMPANAN PROGRESS (MEMORI & LOCALSTORAGE AMAN)
+           ========================================================================= */
+        const defaultState = {
+            currentPage: 'welcome',
+            stars: 0,
+            completedModules: {
+                materi1: false, materi2: false, materi3: false, materi4: false, materi5: false,
+                simulasi: false, praktikum: false,
+                game1: false, game2: false, game3: false,
+                lkpd: false, evaluasi: false
+            },
+            materiSubIndex: 0,
+            simulasiIndex: 0,
+            praktikumIndex: 0,
+            gameTab: 'menu',
+            studentName: '',
+            studentClass: 'III (Tiga)',
+            evalBestScore: 0
+        };
+
+        let appState = JSON.parse(JSON.stringify(defaultState));
+
+        // Memuat data tersimpan jika localStorage tersedia di browser
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('mpi_wujud_zat_sdn3kelaten');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appState = { ...appState, ...parsed, currentPage: 'welcome' };
+                }
+            } catch (e) {
+                // Abaikan jika lingkungan membatasi localStorage
+            }
+            updateHeaderStats();
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('mpi_wujud_zat_sdn3kelaten', JSON.stringify(appState));
+            } catch (e) {
+                // Fallback in-memory tetap berjalan lancar
+            }
+            updateHeaderStats();
+        }
+
+        function addStars(amount, moduleKey = null) {
+            if (moduleKey && !appState.completedModules[moduleKey]) {
+                appState.completedModules[moduleKey] = true;
+                appState.stars += amount;
+            } else if (!moduleKey) {
+                appState.stars += amount;
+            }
+            saveState();
+        }
+
+        function updateHeaderStats() {
+            const starEl = document.getElementById('star-count');
+            const progBar = document.getElementById('progress-bar');
+            const progText = document.getElementById('progress-text');
+            if (!starEl) return;
+
+            starEl.textContent = appState.stars;
+            const totalKeys = Object.keys(appState.completedModules).length;
+            const doneKeys = Object.values(appState.completedModules).filter(Boolean).length;
+            const pct = Math.round((doneKeys / totalKeys) * 100);
+            progBar.style.width = pct + '%';
+            progText.textContent = pct + '%';
+        }
+
+        /* =========================================================================
+           2. SISTEM AUDIO: WEB SPEECH API (NARATOR ID) & WEB AUDIO API (MUSIK + SFX)
+           ========================================================================= */
+        let audioCtx = null;
+        let bgmPlaying = false;
+        let bgmInterval = null;
+        let bgmVolume = 0.5;
+        let sfxVolume = 0.8;
+        let ttsVolume = 1.0;
+        let lastSpokenText = '';
+        let indonesianVoice = null;
+
+        // Inisialisasi suara Bahasa Indonesia pada Web Speech API
+        function initVoices() {
+            if (!('speechSynthesis' in window)) {
+                const notice = document.getElementById('tts-support-notice');
+                if (notice) notice.textContent = "Browser tidak mendukung suara otomatis. Silakan baca teks di layar.";
+                return;
+            }
+            const setVoice = () => {
+                const voices = window.speechSynthesis.getVoices();
+                indonesianVoice = voices.find(v => v.lang.includes('id-ID') || v.lang.includes('id')) || null;
+                const notice = document.getElementById('tts-support-notice');
+                if (notice) {
+                    notice.textContent = indonesianVoice
+                        ? `Suara Bahasa Indonesia Aktif (${indonesianVoice.name})`
+                        : "Menggunakan suara default browser (Bahasa Indonesia).";
+                }
+            };
+            setVoice();
+            window.speechSynthesis.onvoiceschanged = setVoice;
+        }
+
+        // Membacakan teks Bahasa Indonesia (menghentikan suara sebelumnya agar tidak bertumpuk)
+        function speakText(text) {
+            lastSpokenText = text;
+            if (!('speechSynthesis' in window)) {
+                showFeedbackModal('info', 'Mode Baca Teks', text);
+                return;
+            }
+            window.speechSynthesis.cancel(); // Hentikan narasi sebelumnya
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            if (indonesianVoice) utterance.voice = indonesianVoice;
+            utterance.rate = 0.95; // Sedikit lebih jelas untuk anak kelas 3 SD
+            utterance.pitch = 1.08;
+            utterance.volume = ttsVolume;
+
+            const floatingBar = document.getElementById('audio-floating-bar');
+            const statusText = document.getElementById('tts-status-text');
+            const pauseBtn = document.getElementById('btn-tts-pause');
+
+            utterance.onstart = () => {
+                floatingBar.classList.remove('hidden');
+                statusText.textContent = "Membacakan...";
+                pauseBtn.innerHTML = '<i class="fas fa-pause text-xs"></i>';
+            };
+            utterance.onend = () => {
+                floatingBar.classList.add('hidden');
+            };
+            utterance.onerror = () => {
+                floatingBar.classList.add('hidden');
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function pauseResumeSpeech() {
+            if (!('speechSynthesis' in window)) return;
+            const pauseBtn = document.getElementById('btn-tts-pause');
+            const statusText = document.getElementById('tts-status-text');
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+                pauseBtn.innerHTML = '<i class="fas fa-pause text-xs"></i>';
+                statusText.textContent = "Membacakan...";
+            } else if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.pause();
+                pauseBtn.innerHTML = '<i class="fas fa-play text-xs"></i>';
+                statusText.textContent = "Dijeda";
+            }
+        }
+
+        function replayLastSpeech() {
+            if (lastSpokenText) speakText(lastSpokenText);
+        }
+
+        function stopSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            document.getElementById('audio-floating-bar').classList.add('hidden');
+        }
+
+        // Inisialisasi Web Audio Context untuk Efek Suara & Musik Latar Ceria
+        function ensureAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Efek Suara (klik, benar/tepuk tangan sintetis, salah, kemenangan)
+        function playSFX(type) {
+            if (sfxVolume <= 0) return;
+            ensureAudioContext();
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(520, now);
+                osc.frequency.exponentialRampToValueAtTime(780, now + 0.08);
+                gain.gain.setValueAtTime(0.18 * sfxVolume, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.09);
+            } else if (type === 'correct') {
+                // Nada ceria + simulasi tepuk tangan riuh
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+                    gain.gain.setValueAtTime(0.25 * sfxVolume, now + idx * 0.09);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.35);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.09);
+                    osc.stop(now + idx * 0.09 + 0.35);
+                });
+                // Efek tepuk tangan (noise burst berulang)
+                for (let c = 0; c < 6; c++) {
+                    const bufferSize = audioCtx.sampleRate * 0.06;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 1200;
+
+                    const cGain = audioCtx.createGain();
+                    const startTime = now + 0.1 + c * 0.11;
+                    cGain.gain.setValueAtTime(0.22 * sfxVolume, startTime);
+                    cGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.06);
+
+                    noise.connect(filter);
+                    filter.connect(cGain);
+                    cGain.connect(audioCtx.destination);
+                    noise.start(startTime);
+                }
+            } else if (type === 'wrong') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(260, now);
+                osc.frequency.linearRampToValueAtTime(180, now + 0.3);
+                gain.gain.setValueAtTime(0.18 * sfxVolume, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.32);
+            } else if (type === 'win') {
+                const melody = [523.25, 523.25, 523.25, 659.25, 783.99, 659.25, 783.99, 1046.50];
+                const times = [0, 0.14, 0.28, 0.42, 0.60, 0.80, 0.95, 1.15];
+                melody.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + times[i]);
+                    gain.gain.setValueAtTime(0.28 * sfxVolume, now + times[i]);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + times[i] + 0.35);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + times[i]);
+                    osc.stop(now + times[i] + 0.35);
+                });
+            }
+        }
+
+        // Musik Latar Ceria Anak (Melody Loop Ringan)
+        function toggleBackgroundMusic() {
+            ensureAudioContext();
+            const btn = document.getElementById('btn-music-toggle');
+            const frontBtn = document.getElementById('front-music-btn');
+
+            if (bgmPlaying) {
+                bgmPlaying = false;
+                clearInterval(bgmInterval);
+                if (btn) {
+                    btn.classList.replace('bg-emerald-500', 'bg-slate-400');
+                    btn.innerHTML = '<i class="fas fa-volume-mute"></i><span class="hidden md:inline text-xs">Musik Mati</span>';
+                }
+                if (frontBtn) {
+                    frontBtn.innerHTML = '<i class="fas fa-volume-mute"></i> Musik: MATI';
+                    frontBtn.classList.replace('bg-emerald-500', 'bg-slate-500');
+                }
+            } else {
+                bgmPlaying = true;
+                const notes = [261.63, 329.63, 392.00, 329.63, 349.23, 440.00, 392.00, 329.63];
+                let step = 0;
+                const playNote = () => {
+                    if (!bgmPlaying || bgmVolume <= 0) return;
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(notes[step % notes.length], now);
+                    gain.gain.setValueAtTime(0.05 * bgmVolume, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0008, now + 0.42);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.42);
+                    step++;
+                };
+                playNote();
+                bgmInterval = setInterval(playNote, 480);
+
+                if (btn) {
+                    btn.classList.replace('bg-slate-400', 'bg-emerald-500');
+                    btn.innerHTML = '<i class="fas fa-music"></i><span class="hidden md:inline text-xs">Musik</span>';
+                }
+                if (frontBtn) {
+                    frontBtn.innerHTML = '<i class="fas fa-music"></i> Musik: HIDUP';
+                    frontBtn.classList.replace('bg-slate-500', 'bg-emerald-500');
+                }
+            }
+        }
+
+        function updateVolumes() {
+            const bgmVal = document.getElementById('bgm-volume-slider').value;
+            const sfxVal = document.getElementById('sfx-volume-slider').value;
+            const ttsVal = document.getElementById('tts-volume-slider').value;
+
+            bgmVolume = bgmVal / 100;
+            sfxVolume = sfxVal / 100;
+            ttsVolume = ttsVal / 100;
+
+            document.getElementById('bgm-vol-label').textContent = bgmVal + '%';
+            document.getElementById('sfx-vol-label').textContent = sfxVal + '%';
+            document.getElementById('tts-vol-label').textContent = ttsVal + '%';
+        }
+
+        /* =========================================================================
+           3. BANK DATA MATERI, SIMULASI, PRAKTIKUM, GAME, LKPD, & EVALUASI
+           ========================================================================= */
+
+        // ILUSTRASI SVG KARAKTER LABORATORIUM CILIK (3D-Style Gradients)
+        const svgCharacters = {
+            profesor: `
+                <svg viewBox="0 0 180 180" class="w-32 h-32 md:w-40 md:h-40 mx-auto drop-shadow-lg animate-float">
+                    <defs>
+                        <radialGradient id="faceGrad" cx="40%" cy="35%" r="60%">
+                            <stop offset="0%" stop-color="#fde68a"/>
+                            <stop offset="100%" stop-color="#f59e0b"/>
+                        </radialGradient>
+                        <linearGradient id="coatGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#e2e8f0"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Jas Lab -->
+                    <path d="M40 165 C40 125, 140 125, 140 165 Z" fill="url(#coatGrad)" stroke="#0284c7" stroke-width="3"/>
+                    <path d="M90 125 L75 165 L105 165 Z" fill="#38bdf8"/>
+                    <!-- Kepala -->
+                    <circle cx="90" cy="85" r="42" fill="url(#faceGrad)" stroke="#d97706" stroke-width="3"/>
+                    <!-- Rambut Lucu -->
+                    <path d="M48 75 C45 35, 135 35, 132 75 C120 55, 60 55, 48 75 Z" fill="#1e293b"/>
+                    <circle cx="90" cy="36" r="10" fill="#1e293b"/>
+                    <!-- Kacamata Ilmuwan -->
+                    <circle cx="74" cy="84" r="14" fill="#e0f2fe" stroke="#0369a1" stroke-width="4"/>
+                    <circle cx="106" cy="84" r="14" fill="#e0f2fe" stroke="#0369a1" stroke-width="4"/>
+                    <line x1="88" y1="84" x2="92" y2="84" stroke="#0369a1" stroke-width="4"/>
+                    <!-- Mata -->
+                    <circle cx="74" cy="84" r="5" fill="#0f172a"/>
+                    <circle cx="106" cy="84" r="5" fill="#0f172a"/>
+                    <circle cx="76" cy="82" r="2" fill="#ffffff"/>
+                    <circle cx="108" cy="82" r="2" fill="#ffffff"/>
+                    <!-- Senyum -->
+                    <path d="M78 104 Q90 116 102 104" fill="none" stroke="#9a3412" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Tabung Reaksi -->
+                    <rect x="142" y="95" width="14" height="42" rx="7" fill="#a7f3d0" stroke="#059669" stroke-width="2.5" transform="rotate(15 142 95)"/>
+                </svg>`,
+            esBatu: `
+                <svg viewBox="0 0 120 120" class="w-20 h-20 md:w-24 md:h-24 mx-auto drop-shadow-md animate-float">
+                    <defs>
+                        <linearGradient id="iceGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#e0f2fe"/>
+                            <stop offset="50%" stop-color="#38bdf8"/>
+                            <stop offset="100%" stop-color="#0284c7"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="20" y="20" width="80" height="80" rx="18" fill="url(#iceGrad)" stroke="#0369a1" stroke-width="3"/>
+                    <path d="M30 32 L55 32 L40 50 Z" fill="rgba(255,255,255,0.6)"/>
+                    <circle cx="48" cy="60" r="5" fill="#0f172a"/>
+                    <circle cx="72" cy="60" r="5" fill="#0f172a"/>
+                    <path d="M52 72 Q60 80 68 72" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+                </svg>`,
+            tetesAir: `
+                <svg viewBox="0 0 120 120" class="w-20 h-20 md:w-24 md:h-24 mx-auto drop-shadow-md animate-float-delay">
+                    <defs>
+                        <radialGradient id="waterGrad" cx="35%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="#7dd3fc"/>
+                            <stop offset="100%" stop-color="#2563eb"/>
+                        </radialGradient>
+                    </defs>
+                    <path d="M60 15 C60 15 95 58 95 80 C95 99 79 110 60 110 C41 110 25 99 25 80 C25 58 60 15 60 15 Z" fill="url(#waterGrad)" stroke="#1d4ed8" stroke-width="3"/>
+                    <ellipse cx="45" cy="62" rx="5" ry="10" fill="rgba(255,255,255,0.6)" transform="rotate(-20 45 62)"/>
+                    <circle cx="50" cy="76" r="4.5" fill="#ffffff"/>
+                    <circle cx="70" cy="76" r="4.5" fill="#ffffff"/>
+                    <circle cx="50" cy="76" r="2.5" fill="#0f172a"/>
+                    <circle cx="70" cy="76" r="2.5" fill="#0f172a"/>
+                    <path d="M52 88 Q60 95 68 88" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                </svg>`,
+            awanGas: `
+                <svg viewBox="0 0 120 120" class="w-20 h-20 md:w-24 md:h-24 mx-auto drop-shadow-md animate-float">
+                    <defs>
+                        <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="100%" stop-color="#cbd5e1"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M32 85 H88 A20 20 0 0 0 88 45 A26 26 0 0 0 38 38 A22 22 0 0 0 32 85 Z" fill="url(#cloudGrad)" stroke="#64748b" stroke-width="3"/>
+                    <circle cx="50" cy="62" r="4.5" fill="#334155"/>
+                    <circle cx="72" cy="62" r="4.5" fill="#334155"/>
+                    <path d="M55 72 Q61 78 67 72" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                </svg>`
+        };
+
+        // DATA MATERI (5 SUBBAB + CONTOH + KUIS MINI)
+        const materiData = [
+            {
+                id: 'materi1',
+                subbab: 'SUBBAB 1: MENGENAL WUJUD ZAT',
+                color: 'sky',
+                icon: 'fa-atom',
+                title: 'Apa Itu Zat dan Wujud Zat?',
+                narration: 'Subbab 1: Mengenal Wujud Zat. Zat adalah segala sesuatu yang memiliki massa dan menempati ruang. Semua benda di sekitar kita tersusun dari zat. Berdasarkan wujudnya, zat dibagi menjadi tiga jenis, yaitu benda padat, benda cair, dan benda gas.',
+                content: `
+                    <p class="text-base md:text-lg leading-relaxed mb-3">
+                        Halo Ilmuwan Cilik! Coba lihat benda-benda di sekitarmu. Ada meja, kursi, air minum, dan udara yang kita hirup. Semua itu disebut <b>Materi</b> atau <b>Zat</b>.
+                    </p>
+                    <div class="bg-sky-50 border-l-4 border-sky-500 p-4 rounded-2xl mb-4">
+                        <p class="font-extrabold text-sky-800 text-base md:text-lg">
+                            💡 Pengertian Zat: Segala sesuatu yang memiliki massa (berat) dan menempati ruang.
+                        </p>
+                    </div>
+                    <p class="font-bold text-slate-700 mb-2">Di alam ini, wujud zat dibagi menjadi 3 kelompok besar:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl text-center">
+                            <div class="text-3xl mb-1">🧱</div>
+                            <h4 class="font-black text-amber-800">1. Benda Padat</h4>
+                            <p class="text-xs text-slate-700">Contoh: Pensil, buku, batu</p>
+                        </div>
+                        <div class="bg-blue-100 border-2 border-blue-300 p-3 rounded-2xl text-center">
+                            <div class="text-3xl mb-1">💧</div>
+                            <h4 class="font-black text-blue-800">2. Benda Cair</h4>
+                            <p class="text-xs text-slate-700">Contoh: Air, susu, minyak</p>
+                        </div>
+                        <div class="bg-emerald-100 border-2 border-emerald-300 p-3 rounded-2xl text-center">
+                            <div class="text-3xl mb-1">🎈</div>
+                            <h4 class="font-black text-emerald-800">3. Benda Gas</h4>
+                            <p class="text-xs text-slate-700">Contoh: Udara, uap air</p>
+                        </div>
+                    </div>
+                `,
+                illustration: svgCharacters.profesor,
+                quiz: {
+                    question: 'Segala sesuatu yang memiliki massa dan menempati ruang disebut...',
+                    options: ['Cahaya', 'Zat atau Materi', 'Bayangan'],
+                    answer: 1,
+                    explanation: 'Benar! Zat atau materi adalah segala sesuatu yang memiliki massa dan menempati ruang.'
+                }
+            },
+            {
+                id: 'materi2',
+                subbab: 'SUBBAB 2: BENDA PADAT',
+                color: 'amber',
+                icon: 'fa-cube',
+                title: 'Sifat dan Contoh Benda Padat',
+                narration: 'Subbab 2: Benda Padat. Benda padat adalah benda yang memiliki bentuk dan volume tetap, meskipun dipindahkan ke tempat lain. Contoh benda padat adalah batu, pensil, meja, buku, dan es batu.',
+                content: `
+                    <p class="text-base md:text-lg leading-relaxed mb-3">
+                        Coba masukkan pensil ke dalam gelas, lalu pindahkan ke atas meja. Apakah bentuk pensil berubah? Tentu tidak! Itulah ciri khas <b>Benda Padat</b>.
+                    </p>
+                    <div class="bg-amber-50 border-2 border-amber-300 p-4 rounded-2xl mb-4">
+                        <h4 class="font-black text-amber-800 mb-2">✨ Ciri-Ciri Benda Padat:</h4>
+                        <ul class="list-disc list-inside space-y-1 font-bold text-slate-700 text-sm md:text-base">
+                            <li>Memiliki <b>bentuk yang tetap</b> (tidak mengikuti wadah).</li>
+                            <li>Memiliki <b>volume (ukuran) yang tetap</b>.</li>
+                            <li>Dapat dipegang dan dilihat secara langsung.</li>
+                        </ul>
+                    </div>
+                    <h4 class="font-extrabold text-slate-700 mb-2">Contoh Benda Padat di Sekitar Kita:</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
+                        <div class="bg-white border-2 border-amber-200 p-2 rounded-xl shadow-sm"><span class="text-2xl">🪨</span><p class="text-xs font-bold mt-1">Batu</p></div>
+                        <div class="bg-white border-2 border-amber-200 p-2 rounded-xl shadow-sm"><span class="text-2xl">✏️</span><p class="text-xs font-bold mt-1">Pensil</p></div>
+                        <div class="bg-white border-2 border-amber-200 p-2 rounded-xl shadow-sm"><span class="text-2xl">🪑</span><p class="text-xs font-bold mt-1">Meja</p></div>
+                        <div class="bg-white border-2 border-amber-200 p-2 rounded-xl shadow-sm"><span class="text-2xl">📘</span><p class="text-xs font-bold mt-1">Buku</p></div>
+                        <div class="bg-white border-2 border-amber-200 p-2 rounded-xl shadow-sm col-span-2 sm:col-span-1"><span class="text-2xl">🧊</span><p class="text-xs font-bold mt-1">Es Batu</p></div>
+                    </div>
+                `,
+                illustration: svgCharacters.esBatu,
+                quiz: {
+                    question: 'Jika sebuah buku dimasukkan ke dalam tas, maka bentuk buku tersebut akan...',
+                    options: ['Berubah seperti tas', 'Tetap seperti semula', 'Menguap ke udara'],
+                    answer: 1,
+                    explanation: 'Hebat! Buku adalah benda padat sehingga bentuk dan volumenya selalu tetap.'
+                }
+            },
+            {
+                id: 'materi3',
+                subbab: 'SUBBAB 3: BENDA CAIR',
+                color: 'blue',
+                icon: 'fa-tint',
+                title: 'Sifat dan Contoh Benda Cair',
+                narration: 'Subbab 3: Benda Cair. Benda cair memiliki sifat bentuknya berubah mengikuti bentuk wadahnya, tetapi volumenya tetap jika jumlah zat tidak berubah. Contoh benda cair adalah air, susu, minyak goreng, dan sirup.',
+                content: `
+                    <p class="text-base md:text-lg leading-relaxed mb-3">
+                        Ketika kamu menuangkan air dari botol ke dalam gelas, bentuk air akan berubah seperti gelas. Namun, banyaknya air tetap sama!
+                    </p>
+                    <div class="bg-blue-50 border-2 border-blue-300 p-4 rounded-2xl mb-4">
+                        <h4 class="font-black text-blue-800 mb-2">💧 Ciri-Ciri Benda Cair:</h4>
+                        <ul class="list-disc list-inside space-y-1 font-bold text-slate-700 text-sm md:text-base">
+                            <li><b>Bentuk berubah</b> mengikuti bentuk wadahnya.</li>
+                            <li><b>Volume tetap</b> jika jumlah zat tidak bertambah atau berkurang.</li>
+                            <li>Mengalir dari tempat tinggi ke tempat yang lebih rendah.</li>
+                        </ul>
+                    </div>
+                    <h4 class="font-extrabold text-slate-700 mb-2">Contoh Benda Cair di Sekitar Kita:</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                        <div class="bg-white border-2 border-blue-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">💧</span><p class="text-xs font-bold mt-1">Air Putih</p></div>
+                        <div class="bg-white border-2 border-blue-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">🥛</span><p class="text-xs font-bold mt-1">Susu</p></div>
+                        <div class="bg-white border-2 border-blue-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">🫗</span><p class="text-xs font-bold mt-1">Minyak Goreng</p></div>
+                        <div class="bg-white border-2 border-blue-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">🧃</span><p class="text-xs font-bold mt-1">Sirup</p></div>
+                    </div>
+                `,
+                illustration: svgCharacters.tetesAir,
+                quiz: {
+                    question: 'Susu yang dituangkan dari kotak ke dalam mangkuk bentuknya akan...',
+                    options: ['Tetap kotak', 'Mengikuti bentuk mangkuk', 'Menghilang'],
+                    answer: 1,
+                    explanation: 'Tepat sekali! Benda cair selalu menyesuaikan bentuk wadah yang ditempatinya.'
+                }
+            },
+            {
+                id: 'materi4',
+                subbab: 'SUBBAB 4: BENDA GAS',
+                color: 'emerald',
+                icon: 'fa-wind',
+                title: 'Sifat dan Contoh Benda Gas',
+                narration: 'Subbab 4: Benda Gas. Benda gas tidak memiliki bentuk dan volume yang tetap. Gas selalu mengisi seluruh ruang atau wadah yang ditempatinya. Contoh benda gas adalah udara yang kita hirup, gas di dalam balon, dan asap.',
+                content: `
+                    <p class="text-base md:text-lg leading-relaxed mb-3">
+                        Pernahkah kamu meniup balon? Udara yang masuk ke dalam balon adalah <b>Benda Gas</b>. Gas tidak selalu terlihat mata, tetapi dapat kita rasakan!
+                    </p>
+                    <div class="bg-emerald-50 border-2 border-emerald-300 p-4 rounded-2xl mb-4">
+                        <h4 class="font-black text-emerald-800 mb-2">🌬️ Ciri-Ciri Benda Gas:</h4>
+                        <ul class="list-disc list-inside space-y-1 font-bold text-slate-700 text-sm md:text-base">
+                            <li><b>Tidak memiliki bentuk tetap</b>.</li>
+                            <li><b>Tidak memiliki volume tetap</b>.</li>
+                            <li><b>Mengisi seluruh ruang</b> atau wadah yang ditempatinya.</li>
+                        </ul>
+                    </div>
+                    <h4 class="font-extrabold text-slate-700 mb-2">Contoh Benda Gas di Sekitar Kita:</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                        <div class="bg-white border-2 border-emerald-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">🌬️</span><p class="text-xs font-bold mt-1">Udara</p></div>
+                        <div class="bg-white border-2 border-emerald-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">🎈</span><p class="text-xs font-bold mt-1">Gas dalam Balon</p></div>
+                        <div class="bg-white border-2 border-emerald-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">♨️</span><p class="text-xs font-bold mt-1">Uap Air</p></div>
+                        <div class="bg-white border-2 border-emerald-200 p-2.5 rounded-xl shadow-sm"><span class="text-2xl">☁️</span><p class="text-xs font-bold mt-1">Awan / Asap</p></div>
+                    </div>
+                `,
+                illustration: svgCharacters.awanGas,
+                quiz: {
+                    question: 'Bagaimana sifat benda gas saat dimasukkan ke dalam ruangan atau balon?',
+                    options: ['Mengendap di dasar saja', 'Mengisi seluruh ruang atau wadah', 'Bentuknya selalu kotak'],
+                    answer: 1,
+                    explanation: 'Luar biasa! Gas selalu menyebar dan mengisi seluruh ruang yang ditempatinya.'
+                }
+            },
+            {
+                id: 'materi5',
+                subbab: 'SUBBAB 5: PERUBAHAN WUJUD ZAT',
+                color: 'orange',
+                icon: 'fa-sync-alt',
+                title: 'Enam Perubahan Wujud Zat',
+                narration: 'Subbab 5: Perubahan Wujud Zat. Wujud zat dapat berubah karena menerima panas atau melepas panas. Ada enam perubahan wujud zat: 1. Mencair, yaitu padat menjadi cair. 2. Membeku, yaitu cair menjadi padat. 3. Menguap, yaitu cair menjadi gas. 4. Mengembun, yaitu gas menjadi cair. 5. Menyublim, yaitu padat menjadi gas. 6. Mengkristal atau deposisi, yaitu gas menjadi padat.',
+                content: `
+                    <p class="text-sm md:text-base leading-relaxed mb-3">
+                        Zat dapat berubah wujud apabila <b>menerima panas (dipanaskan)</b> atau <b>melepas panas (didinginkan)</b>. Perhatikan 6 perubahan wujud berikut:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="bg-rose-50 border-2 border-rose-300 p-3 rounded-2xl">
+                            <span class="bg-rose-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">1. MENCAIR</span>
+                            <h5 class="font-black text-rose-800 mt-1">Padat ➔ Cair</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Es batu</b> dibiarkan di udara terbuka berubah menjadi <b>air</b>.</p>
+                        </div>
+                        <div class="bg-sky-50 border-2 border-sky-300 p-3 rounded-2xl">
+                            <span class="bg-sky-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">2. MEMBEKU</span>
+                            <h5 class="font-black text-sky-800 mt-1">Cair ➔ Padat</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Air</b> dimasukkan ke dalam freezer berubah menjadi <b>es batu</b>.</p>
+                        </div>
+                        <div class="bg-amber-50 border-2 border-amber-300 p-3 rounded-2xl">
+                            <span class="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3. MENGUAP</span>
+                            <h5 class="font-black text-amber-800 mt-1">Cair ➔ Gas</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Air</b> yang dipanaskan mendidih dan berubah menjadi <b>uap air</b>.</p>
+                        </div>
+                        <div class="bg-blue-50 border-2 border-blue-300 p-3 rounded-2xl">
+                            <span class="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">4. MENGEMBUN</span>
+                            <h5 class="font-black text-blue-800 mt-1">Gas ➔ Cair</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Uap air</b> di udara mendingin menjadi <b>titik air</b> di luar gelas es.</p>
+                        </div>
+                        <div class="bg-purple-50 border-2 border-purple-300 p-3 rounded-2xl">
+                            <span class="bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">5. MENYUBLIM</span>
+                            <h5 class="font-black text-purple-800 mt-1">Padat ➔ Gas</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Kapur barus</b> di lemari lama-lama mengecil dan berubah menjadi <b>gas wangi</b>.</p>
+                        </div>
+                        <div class="bg-teal-50 border-2 border-teal-300 p-3 rounded-2xl">
+                            <span class="bg-teal-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">6. MENGKRISTAL</span>
+                            <h5 class="font-black text-teal-800 mt-1">Gas ➔ Padat</h5>
+                            <p class="text-xs text-slate-700 mt-1">Contoh: <b>Uap air</b> di udara sangat dingin berubah langsung menjadi <b>kristal salju/es</b>.</p>
+                        </div>
+                    </div>
+                `,
+                illustration: svgCharacters.profesor,
+                quiz: {
+                    question: 'Perubahan wujud kapur barus (benda padat) menjadi gas disebut...',
+                    options: ['Mencair', 'Menyublim', 'Membeku'],
+                    answer: 1,
+                    explanation: 'Sempurna! Menyublim adalah perubahan wujud dari benda padat langsung menjadi gas.'
+                }
+            }
+        ];
+
+        // DATA SIMULASI INTERAKTIF (6 SIMULASI LABORATORIUM)
+        const simulasiData = [
+            {
+                id: 'mencair',
+                title: '1. Simulasi Mencair (Padat ➔ Cair)',
+                actionLabel: 'Klik Es Batu / Mulai Pemanasan',
+                processDesc: 'Es batu (benda padat) menerima panas dari matahari atau suhu ruangan. Suhu es naik sehingga es perlahan mencair menjadi air (benda cair).',
+                conclusion: 'Kesimpulan: Mencair terjadi karena benda padat menerima energi panas.',
+                narration: 'Simulasi Mencair. Ketika es batu menerima panas dari lingkungan, suhunya meningkat. Es batu yang tadinya padat perlahan-lahan meleleh dan berubah menjadi air. Kesimpulannya, mencair terjadi karena benda padat menerima panas.'
+            },
+            {
+                id: 'membeku',
+                title: '2. Simulasi Membeku (Cair ➔ Padat)',
+                actionLabel: 'Klik Air / Masukkan ke Freezer',
+                processDesc: 'Air (benda cair) dimasukkan ke dalam freezer yang sangat dingin. Air melepaskan panas sehingga suhunya turun dan membeku menjadi es batu (benda padat).',
+                conclusion: 'Kesimpulan: Membeku terjadi karena benda cair melepaskan energi panas (didinginkan).',
+                narration: 'Simulasi Membeku. Ketika air dimasukkan ke dalam freezer yang dingin, air melepaskan panasnya. Lama-kelamaan air mengeras dan berubah menjadi es batu yang padat. Kesimpulannya, membeku terjadi karena benda cair melepaskan panas.'
+            },
+            {
+                id: 'menguap',
+                title: '3. Simulasi Menguap (Cair ➔ Gas)',
+                actionLabel: 'Klik Pemanasan Kompor',
+                processDesc: 'Air di dalam panci dipanaskan di atas kompor. Karena menerima panas tinggi, air mendidih dan berubah menjadi uap air (benda gas) yang naik ke udara.',
+                conclusion: 'Kesimpulan: Menguap terjadi ketika benda cair menerima panas yang cukup.',
+                narration: 'Simulasi Menguap. Saat air dipanaskan di atas kompor, air menerima banyak panas hingga mendidih. Air kemudian berubah wujud menjadi uap air yang terbang ke udara. Kesimpulannya, menguap terjadi karena benda cair menerima panas.'
+            },
+            {
+                id: 'mengembun',
+                title: '4. Simulasi Mengembun (Gas ➔ Cair)',
+                actionLabel: 'Amati Gelas Berisi Es',
+                processDesc: 'Uap air (gas) di sekitar gelas menyentuh dinding gelas es yang dingin. Uap air melepaskan panas dan berubah menjadi titik-titik embun air di luar gelas.',
+                conclusion: 'Kesimpulan: Mengembun terjadi karena benda gas melepaskan panas saat menyentuh permukaan dingin.',
+                narration: 'Simulasi Mengembun. Udara di sekitar gelas es mengandung uap air. Saat uap air menyentuh dinding gelas yang dingin, uap air melepaskan panas dan berubah menjadi titik-titik air di bagian luar gelas. Kesimpulannya, mengembun adalah perubahan gas menjadi cair.'
+            },
+            {
+                id: 'menyublim',
+                title: '5. Simulasi Menyublim (Padat ➔ Gas)',
+                actionLabel: 'Amati Kapur Barus',
+                processDesc: 'Kapur barus (benda padat) diletakkan di ruangan terbuka. Kapur barus menyerap panas ruangan dan berubah langsung menjadi gas harum tanpa mencair terlebih dahulu.',
+                conclusion: 'Kesimpulan: Menyublim adalah perubahan wujud padat langsung menjadi gas karena menerima panas.',
+                narration: 'Simulasi Menyublim. Kapur barus merupakan benda padat. Ketika diletakkan di lemari atau udara terbuka, kapur barus menyerap panas dan berubah langsung menjadi gas yang harum sehingga ukurannya makin kecil.'
+            },
+            {
+                id: 'mengkristal',
+                title: '6. Simulasi Mengkristal / Deposisi (Gas ➔ Padat)',
+                actionLabel: 'Amati Pembentukan Kristal Salju',
+                processDesc: 'Uap air (gas) di awan yang suhunya sangat dingin di bawah nol derajat melepaskan panas secara cepat sehingga berubah langsung menjadi kristal es atau salju (padat).',
+                conclusion: 'Kesimpulan: Mengkristal (deposisi) terjadi saat benda gas melepaskan panas pada suhu sangat dingin.',
+                narration: 'Simulasi Mengkristal atau Deposisi. Di awan yang sangat dingin, uap air yang berwujud gas melepaskan panas dengan cepat dan berubah langsung menjadi butiran kristal es atau salju yang padat.'
+            }
+        ];
+
+        // DATA PRAKTIKUM LABORATORIUM ILMUWAN CILIK (4 KEGIATAN)
+        const praktikumData = [
+            {
+                id: 'prak1',
+                title: 'PRAKTIKUM 1: ES BATU MENCAIR',
+                icon: '🧊',
+                safety: '⚠️ Peringatan Keselamatan: Lakukan percobaan di atas meja yang rata dan kering agar lantai tidak licin terkena air.',
+                goal: 'Mengamati perubahan wujud benda padat (es batu) menjadi benda cair (air).',
+                tools: ['2 buah es batu ukuran sedang', '1 buah piring kecil', 'Stopwatch / jam dinding'],
+                steps: [
+                    'Letakkan dua buah es batu di atas piring kecil.',
+                    'Simpan piring di tempat yang terkena cahaya matahari atau suhu ruang kelas.',
+                    'Amati perubahan es batu setiap 3 menit selama 10 menit.',
+                    'Catat hasil pengamatanmu pada tabel di bawah ini.'
+                ],
+                tableRows: [
+                    { waktu: 'Menit ke-0 (Awal)', kondisi: 'Es batu berbentuk kotak keras dan dingin' },
+                    { waktu: 'Menit ke-5', kondisi: 'Ukuran es mengecil dan mulai muncul genangan air' },
+                    { waktu: 'Menit ke-10', kondisi: 'Es berubah seluruhnya menjadi air di piring' }
+                ],
+                triggerQuestion: 'Mengapa es batu di atas piring lama-kelamaan berubah menjadi air?',
+                conclusion: 'Es batu (padat) berubah menjadi air (cair) karena menerima panas dari udara di sekitarnya. Peristiwa ini disebut mencair.'
+            },
+            {
+                id: 'prak2',
+                title: 'PRAKTIKUM 2: AIR MEMBEKU',
+                icon: '❄️',
+                safety: '⚠️ Peringatan Keselamatan: Gunakan wadah plastik yang aman (jangan kaca) saat memasukkan air ke freezer dengan bantuan guru.',
+                goal: 'Mengamati perubahan wujud benda cair (air) menjadi benda padat (es).',
+                tools: ['Air matang secukupnya', 'Cetakan es atau gelas plastik kecil', 'Lemari pendingin (Freezer)'],
+                steps: [
+                    'Tuangkan air ke dalam cetakan es atau gelas plastik.',
+                    'Perhatikan wujud air sebelum dimasukkan ke freezer (mengalir dan mengikuti wadah).',
+                    'Dengan bantuan guru, masukkan air ke dalam freezer selama beberapa jam.',
+                    'Keluarkan cetakan dan amati perubahan wujud yang terjadi.'
+                ],
+                tableRows: [
+                    { waktu: 'Sebelum masuk freezer', kondisi: 'Wujud cair, dapat dituang dan mengalir' },
+                    { waktu: 'Setelah 3 jam di freezer', kondisi: 'Wujud padat, keras, dingin, dan bentuknya tetap' }
+                ],
+                triggerQuestion: 'Apa yang menyebabkan air di dalam freezer bisa mengeras menjadi es?',
+                conclusion: 'Air (cair) berubah menjadi es batu (padat) karena suhu di dalam freezer sangat dingin sehingga air melepaskan panas. Peristiwa ini disebut membeku.'
+            },
+            {
+                id: 'prak3',
+                title: 'PRAKTIKUM 3: MENGAMATI PENGUAPAN',
+                icon: '♨️',
+                safety: '🛑 PERINGATAN KESELAMATAN PENTING: Percobaan menggunakan air panas HARUS dilakukan oleh Guru! Siswa dilarang menyentuh wadah panas atau menghirup uap secara langsung.',
+                goal: 'Mengamati proses perubahan benda cair menjadi gas (uap air).',
+                tools: ['Air hangat / panas (disiapkan guru)', 'Gelas atau mangkuk tahan panas', 'Tutup gelas bening'],
+                steps: [
+                    'Guru menuangkan air hangat ke dalam wadah tahan panas di meja percobaan.',
+                    'Siswa mengamati dari jarak aman (sekitar 50 cm) asap tipis yang naik ke atas.',
+                    'Guru menutup wadah sebentar dengan tutup bening, lalu mengangkatnya.',
+                    'Amati uap air yang naik dari permukaan air hangat.'
+                ],
+                tableRows: [
+                    { waktu: 'Saat air hangat dituang', kondisi: 'Terlihat uap air tipis naik ke udara (wujud gas)' },
+                    { waktu: 'Setelah beberapa saat', kondisi: 'Jumlah uap berkurang seiring air mulai mendingin' }
+                ],
+                triggerQuestion: 'Ke manakah perginya asap tipis (uap air) yang naik dari permukaan air hangat?',
+                conclusion: 'Air hangat menguap menjadi gas (uap air) yang menyebar ke udara karena menerima panas. Peristiwa ini disebut menguap.'
+            },
+            {
+                id: 'prak4',
+                title: 'PRAKTIKUM 4: MENGAMATI PENGEMBUNAN',
+                icon: '🥤',
+                safety: '⚠️ Peringatan Keselamatan: Pegang gelas dengan hati-hati menggunakan kedua tangan agar tidak terjatuh.',
+                goal: 'Mengamati terbentuknya titik-titik air (embun) dari uap air di udara.',
+                tools: ['1 buah gelas bening kering', 'Air dingin dan beberapa potong es batu', 'Tisu untuk mengelap bagian luar gelas di awal'],
+                steps: [
+                    'Pastikan bagian luar gelas benar-benar kering dengan mengelapnya menggunakan tisu.',
+                    'Masukkan air dingin dan es batu ke dalam gelas.',
+                    'Diamkan gelas di atas meja selama 3–5 menit.',
+                    'Sentuh dan amati bagian luar dinding gelas!'
+                ],
+                tableRows: [
+                    { waktu: 'Awal percobaan', kondisi: 'Dinding luar gelas kering dan kesat' },
+                    { waktu: 'Setelah 5 menit', kondisi: 'Muncul titik-titik air halus membasahi dinding luar gelas' }
+                ],
+                triggerQuestion: 'Dari manakah asal titik-titik air di luar gelas, padahal gelas tidak bocor?',
+                conclusion: 'Titik-titik air berasal dari uap air (gas) di udara sekitar gelas yang mendingin dan berubah menjadi air (cair). Peristiwa ini disebut mengembun.'
+            }
+        ];
+
+        // DATA 15 BENDA UNTUK GAME 1 & LKPD
+        const fifteenItems = [
+            { id: 'b1', name: 'Pensil', emoji: '✏️', type: 'Padat' },
+            { id: 'b2', name: 'Air Minum', emoji: '💧', type: 'Cair' },
+            { id: 'b3', name: 'Udara Balon', emoji: '🎈', type: 'Gas' },
+            { id: 'b4', name: 'Batu', emoji: '🪨', type: 'Padat' },
+            { id: 'b5', name: 'Susu Segar', emoji: '🥛', type: 'Cair' },
+            { id: 'b6', name: 'Uap Air', emoji: '♨️', type: 'Gas' },
+            { id: 'b7', name: 'Buku Tulis', emoji: '📘', type: 'Padat' },
+            { id: 'b8', name: 'Minyak Goreng', emoji: '🫗', type: 'Cair' },
+            { id: 'b9', name: 'Asap Kendaraan', emoji: '💨', type: 'Gas' },
+            { id: 'b10', name: 'Es Batu', emoji: '🧊', type: 'Padat' },
+            { id: 'b11', name: 'Sirup Manis', emoji: '🧃', type: 'Cair' },
+            { id: 'b12', name: 'Angin / Udara', emoji: '🌬️', type: 'Gas' },
+            { id: 'b13', name: 'Kursi Kayu', emoji: '🪑', type: 'Padat' },
+            { id: 'b14', name: 'Kecap Manis', emoji: '🍾', type: 'Cair' },
+            { id: 'b15', name: 'Awan di Langit', emoji: '☁️', type: 'Gas' }
+        ];
+
+        // DATA GAME 2: 10 PERTANYAAN TEBAK WUJUD ZAT
+        const game2Questions = [
+            { emoji: '✏️', clue: 'Aku memiliki bentuk dan volume yang tetap. Aku bisa ditemukan di dalam kotak pensil. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 0 },
+            { emoji: '🥛', clue: 'Aku sering diminum saat sarapan. Jika dituang ke gelas, bentukku seperti gelas. Jika dituang ke mangkuk, bentukku seperti mangkuk. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 1 },
+            { emoji: '🎈', clue: 'Aku tidak terlihat oleh mata, tetapi aku membuat balon mengembang besar dan mengisi seluruh ruang balon. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 2 },
+            { emoji: '🪨', clue: 'Aku keras, dapat digenggam, dan jika aku dipindahkan dari halaman ke dalam ember, bentukku tidak berubah. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 0 },
+            { emoji: '🫗', clue: 'Aku digunakan Ibu untuk menggoreng ikan. Aku mengalir dari tempat tinggi ke tempat rendah. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 1 },
+            { emoji: '♨️', clue: 'Aku muncul di atas panci saat air mendidih dan terbang menyebar ke udara. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 2 },
+            { emoji: '🪑', clue: 'Aku terbuat dari kayu yang kuat untuk tempat duduk siswa di kelas. Bentuk dan ukuranku selalu tetap. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 0 },
+            { emoji: '🧃', clue: 'Aku manis dan segar. Volumeku tetap 250 ml baik saat di dalam botol maupun saat dituang ke gelas. Siapakah aku?', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 1 },
+            { emoji: '🌬️', clue: 'Aku bergerak menggoyangkan daun-daun pohon dan membuat kincir angin berputar. Aku adalah...', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 2 },
+            { emoji: '🧊', clue: 'Aku dingin dan keras seperti batu. Sebelum mencair terkena panas, aku termasuk kelompok...', options: ['Benda Padat', 'Benda Cair', 'Benda Gas'], answer: 0 }
+        ];
+
+        // DATA GAME 3: 10 TANTANGAN PETUALANGAN ILMUWAN CILIK
+        const game3Challenges = [
+            { level: 1, title: 'Tantangan 1: Gerbang Laboratorium', q: 'Benda di bawah ini yang termasuk benda padat adalah...', opts: ['Air sirup', 'Penghapus karet', 'Udara dalam ban'], ans: 1 },
+            { level: 2, title: 'Tantangan 2: Rak Tabung Reaksi', q: 'Sifat utama benda cair adalah...', opts: ['Bentuknya selalu tetap', 'Bentuknya mengikuti wadahnya', 'Tidak memiliki volume'], ans: 1 },
+            { level: 3, title: 'Tantangan 3: Ruang Balon Udara', q: 'Udara yang dipompa ke dalam ban sepeda akan...', opts: ['Mengisi seluruh ruang dalam ban', 'Berkumpul di bagian bawah saja', 'Berubah menjadi batu'], ans: 0 },
+            { level: 4, title: 'Tantangan 4: Meja Es Krim', q: 'Es krim yang dibiarkan di bawah sinar matahari lama-lama meleleh. Peristiwa ini disebut...', opts: ['Membeku', 'Mencair', 'Menyublim'], ans: 1 },
+            { level: 5, title: 'Tantangan 5: Ruang Pendingin', q: 'Ibu membuat es lilin dengan memasukkan air sirup ke freezer. Perubahan wujud yang terjadi adalah...', opts: ['Cair menjadi padat (Membeku)', 'Padat menjadi cair (Mencair)', 'Gas menjadi cair (Mengembun)'], ans: 0 },
+            { level: 6, title: 'Tantangan 6: Dapur Eksperimen', q: 'Baju basah yang dijemur di bawah terik matahari menjadi kering karena air mengalami...', opts: ['Pembekuan', 'Penguapan (Menguap)', 'Pengkristalan'], ans: 1 },
+            { level: 7, title: 'Tantangan 7: Jendela Pagi Hari', q: 'Di pagi hari yang sejuk, daun-daun rumput tampak basah oleh titik air meskipun tidak hujan. Peristiwa ini disebut...', opts: ['Mengembun', 'Menyublim', 'Mencair'], ans: 0 },
+            { level: 8, title: 'Tantangan 8: Lemari Pakaian', q: 'Kapur barus yang diletakkan di lemari lama-lama habis dan berbau harum karena mengalami...', opts: ['Membeku', 'Menyublim', 'Mengembun'], ans: 1 },
+            { level: 9, title: 'Tantangan 9: Puncak Gunung Salju', q: 'Uap air di awan yang sangat dingin berubah langsung menjadi kristal salju. Proses ini disebut...', opts: ['Mengkristal (Deposisi)', 'Mencair', 'Menguap'], ans: 0 },
+            { level: 10, title: 'Tantangan 10: Gelar Ilmuwan Cilik!', q: 'Zat dapat berubah wujud apabila benda tersebut...', opts: ['Dicat dengan warna cerah', 'Menerima panas atau melepas panas', 'Disimpan di dalam tas'], ans: 1 }
+        ];
+
+        // DATA EVALUASI AKHIR: 10 SOAL PILIHAN GANDA (NILAI MAKSIMAL 100)
+        const evalQuestions = [
+            {
+                q: '1. Segala sesuatu yang memiliki massa dan menempati ruang disebut...',
+                options: ['A. Energi', 'B. Zat atau materi', 'C. Cahaya', 'D. Bunyi'],
+                answer: 1,
+                explanation: 'Zat (materi) adalah segala sesuatu yang memiliki massa dan menempati ruang.'
+            },
+            {
+                q: '2. Pensil, penghapus, dan penggaris termasuk benda padat karena memiliki sifat...',
+                options: ['A. Bentuk berubah mengikuti wadah', 'B. Bentuk dan volumenya selalu tetap', 'C. Mengisi seluruh ruangan', 'D. Mengalir ke tempat rendah'],
+                answer: 1,
+                explanation: 'Benda padat memiliki bentuk dan volume yang tetap meskipun dipindahkan tempatnya.'
+            },
+            {
+                q: '3. Air di dalam botol dituangkan ke dalam gelas. Hal yang terjadi pada air adalah...',
+                options: ['A. Bentuknya berubah seperti gelas, volumenya tetap', 'B. Bentuk dan volumenya tetap seperti botol', 'C. Bentuknya tetap, volumenya bertambah', 'D. Air berubah menjadi gas'],
+                answer: 0,
+                explanation: 'Benda cair bentuknya mengikuti wadahnya, tetapi volumenya tetap sama.'
+            },
+            {
+                q: '4. Contoh kelompok benda gas yang tepat adalah...',
+                options: ['A. Air, susu, dan minyak', 'B. Batu, kayu, dan besi', 'C. Udara, uap air, dan gas dalam balon', 'D. Es batu, sirup, dan asap'],
+                answer: 2,
+                explanation: 'Udara, uap air, dan gas dalam balon adalah contoh benda berwujud gas.'
+            },
+            {
+                q: '5. Perubahan wujud dari benda padat menjadi benda cair disebut...',
+                options: ['A. Membeku', 'B. Mencair', 'C. Menguap', 'D. Mengembun'],
+                answer: 1,
+                explanation: 'Mencair adalah perubahan wujud dari padat menjadi cair karena menerima panas.'
+            },
+            {
+                q: '6. Air yang dimasukkan ke dalam lemari pembeku (freezer) akan berubah menjadi es batu. Peristiwa ini dinamakan...',
+                options: ['A. Mencair', 'B. Menguap', 'C. Membeku', 'D. Menyublim'],
+                answer: 2,
+                explanation: 'Membeku adalah perubahan wujud dari cair menjadi padat karena melepas panas.'
+            },
+            {
+                q: '7. Saat air direbus hingga mendidih, terlihat uap air keluar dari panci. Peristiwa perubahan wujud cair menjadi gas disebut...',
+                options: ['A. Menguap', 'B. Mengembun', 'C. Membeku', 'D. Mengkristal'],
+                answer: 0,
+                explanation: 'Menguap adalah perubahan wujud dari benda cair menjadi gas akibat pemanasan.'
+            },
+            {
+                q: '8. Munculnya titik-titik air pada bagian luar gelas yang berisi air es merupakan contoh peristiwa...',
+                options: ['A. Mencair', 'B. Menyublim', 'C. Mengembun', 'D. Membeku'],
+                answer: 2,
+                explanation: 'Mengembun adalah perubahan wujud gas (uap air di udara) menjadi titik-titik air karena pendinginan.'
+            },
+            {
+                q: '9. Kapur barus yang diletakkan di lemari lama-kelamaan mengecil dan habis karena berubah menjadi gas. Peristiwa ini disebut...',
+                options: ['A. Mengkristal', 'B. Menyublim', 'C. Menguap', 'D. Mencair'],
+                answer: 1,
+                explanation: 'Menyublim adalah perubahan wujud benda padat langsung menjadi gas.'
+            },
+            {
+                q: '10. Perubahan wujud dari gas (uap air) langsung menjadi kristal es atau salju disebut...',
+                options: ['A. Mengkristal (Deposisi)', 'B. Mencair', 'C. Menguap', 'D. Membeku'],
+                answer: 0,
+                explanation: 'Mengkristal atau deposisi adalah perubahan wujud dari gas langsung menjadi benda padat.'
+            }
+        ];
+
+        /* =========================================================================
+           4. FUNGSI NAVIGASI & MODAL
+           ========================================================================= */
+        function navigateTo(page) {
+            playSFX('click');
+            stopSpeech();
+            appState.currentPage = page;
+
+            const header = document.getElementById('app-header');
+            if (page === 'welcome') {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+
+            const main = document.getElementById('main-container');
+            main.style.opacity = '0';
+            setTimeout(() => {
+                switch (page) {
+                    case 'welcome': renderWelcomePage(); break;
+                    case 'menu': renderMainMenu(); break;
+                    case 'materi': renderMateriPage(); break;
+                    case 'simulasi': renderSimulasiPage(); break;
+                    case 'praktikum': renderPraktikumPage(); break;
+                    case 'game': renderGameHub(); break;
+                    case 'lkpd': renderLKPDPage(); break;
+                    case 'evaluasi': renderEvaluasiPage(); break;
+                    case 'pengembang': renderPengembangPage(); break;
+                }
+                main.style.transition = 'opacity 0.25s ease';
+                main.style.opacity = '1';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 120);
+        }
+
+        function openHelpModal() {
+            playSFX('click');
+            document.getElementById('help-modal').classList.remove('hidden');
+        }
+
+        function openAudioSettingsModal() {
+            playSFX('click');
+            document.getElementById('audio-modal').classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            playSFX('click');
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function showFeedbackModal(type, title, message) {
+            const modal = document.getElementById('feedback-modal');
+            const card = document.getElementById('feedback-card');
+            const icon = document.getElementById('feedback-icon');
+            const titleEl = document.getElementById('feedback-title');
+            const msgEl = document.getElementById('feedback-message');
+
+            if (type === 'success') {
+                card.className = 'bg-white border-4 border-emerald-400 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center';
+                icon.textContent = '🌟👏';
+                titleEl.className = 'text-2xl font-black text-emerald-600 mb-2';
+            } else if (type === 'error') {
+                card.className = 'bg-white border-4 border-orange-400 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center';
+                icon.textContent = '🤔💡';
+                titleEl.className = 'text-2xl font-black text-orange-600 mb-2';
+            } else {
+                card.className = 'bg-white border-4 border-sky-400 rounded-3xl max-w-md w-full p-6 shadow-2xl text-center';
+                icon.textContent = '🔬✨';
+                titleEl.className = 'text-2xl font-black text-sky-600 mb-2';
+            }
+
+            titleEl.textContent = title;
+            msgEl.textContent = message;
+            modal.classList.remove('hidden');
+        }
+
+        /* =========================================================================
+           5. RENDER HALAMAN PEMBUKA (WELCOME SCREEN)
+           ========================================================================= */
+        function renderWelcomePage() {
+            const main = document.getElementById('main-container');
+            main.innerHTML = `
+                <div class="min-h-[88vh] flex flex-col justify-center items-center text-center py-4">
+                    <!-- Top Controls Pembuka -->
+                    <div class="w-full max-w-4xl flex flex-wrap justify-between items-center gap-2 mb-4 px-2">
+                        <div class="bg-white/90 border-2 border-sky-300 px-4 py-1.5 rounded-full text-xs md:text-sm font-extrabold text-sky-700 shadow-sm">
+                            🏫 SD NEGERI 3 KELATEN • IPAS KELAS 3 (FASE B)
+                        </div>
+                        <div class="flex gap-2">
+                            <button id="front-music-btn" onclick="toggleBackgroundMusic()" class="btn-3d ${bgmPlaying ? 'bg-emerald-500' : 'bg-slate-500'} text-white font-bold px-4 py-2 rounded-2xl text-xs md:text-sm flex items-center gap-2">
+                                <i class="fas ${bgmPlaying ? 'fa-music' : 'fa-volume-mute'}"></i> Musik: ${bgmPlaying ? 'HIDUP' : 'MATI'}
+                            </button>
+                            <button onclick="openHelpModal()" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-2xl text-xs md:text-sm flex items-center gap-2">
+                                <i class="fas fa-question-circle"></i> Petunjuk
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Kartu Utama Pembuka -->
+                    <div class="bg-white/95 backdrop-blur border-4 border-sky-400 rounded-[2.5rem] shadow-2xl p-6 md:p-10 max-w-4xl w-full relative overflow-hidden">
+                        <!-- Dekorasi Gelembung Lab -->
+                        <div class="absolute -top-10 -left-10 w-32 h-32 bg-amber-200/50 rounded-full"></div>
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-200/50 rounded-full"></div>
+
+                        <span class="inline-block bg-gradient-to-r from-orange-400 to-amber-400 text-white font-black px-5 py-1.5 rounded-full text-xs md:text-sm tracking-wide shadow mb-3">
+                            🔬 LABORATORIUM ILMUWAN CILIK
+                        </span>
+
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-blue-600 to-emerald-600 leading-tight mb-2">
+                            PETUALANGAN DUNIA WUJUD ZAT
+                        </h1>
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-extrabold text-orange-500 mb-6">
+                            Mengenal Benda Padat, Cair, dan Gas
+                        </h2>
+
+                        <!-- Karakter Animasi Profesor Cilik + Es Batu + Tetes Air + Awan -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 items-center justify-center bg-gradient-to-b from-sky-50 to-emerald-50 border-2 border-sky-200 rounded-3xl p-4 mb-6">
+                            <div class="text-center">
+                                ${svgCharacters.profesor}
+                                <span class="inline-block mt-1 bg-sky-600 text-white text-xs font-bold px-3 py-0.5 rounded-full">Profesor Cilik</span>
+                            </div>
+                            <div class="text-center">
+                                ${svgCharacters.esBatu}
+                                <span class="inline-block mt-1 bg-amber-500 text-white text-xs font-bold px-3 py-0.5 rounded-full">Si Es Batu (Padat)</span>
+                            </div>
+                            <div class="text-center">
+                                ${svgCharacters.tetesAir}
+                                <span class="inline-block mt-1 bg-blue-500 text-white text-xs font-bold px-3 py-0.5 rounded-full">Si Tetes Air (Cair)</span>
+                            </div>
+                            <div class="text-center">
+                                ${svgCharacters.awanGas}
+                                <span class="inline-block mt-1 bg-emerald-500 text-white text-xs font-bold px-3 py-0.5 rounded-full">Si Awan (Gas)</span>
+                            </div>
+                        </div>
+
+                        <!-- Identitas Guru -->
+                        <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl px-5 py-3 inline-block mb-6">
+                            <p class="text-sm md:text-base font-extrabold text-slate-800">
+                                👩‍🏫 Guru Pengampu: <span class="text-sky-700">Oky Susanti, S.Pd.</span>
+                            </p>
+                            <p class="text-xs md:text-sm font-bold text-slate-600">
+                                SD Negeri 3 Kelaten • Mata Pelajaran IPAS Kelas III
+                            </p>
+                        </div>
+
+                        <!-- Tombol Aksi Utama -->
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <button onclick="startAdventure()" class="btn-3d animate-pulse-soft bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-black text-xl md:text-2xl px-10 py-4 rounded-3xl flex items-center gap-3 shadow-xl">
+                                <i class="fas fa-rocket"></i> MULAI BELAJAR
+                            </button>
+                            <button onclick="speakText('Selamat datang di Petualangan Dunia Wujud Zat: Mengenal Benda Padat, Cair, dan Gas. Bersama Ibu Oky Susanti, S.Pd., dari SD Negeri 3 Kelaten. Ayo klik tombol Mulai Belajar!')" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-bold text-base px-6 py-4 rounded-3xl flex items-center gap-2">
+                                <i class="fas fa-volume-up"></i> Sapaan Suara
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startAdventure() {
+            if (!bgmPlaying) toggleBackgroundMusic();
+            speakText('Halo anak-anak kelas 3 SD Negeri 3 Kelaten! Pilih menu belajar yang kamu inginkan.');
+            navigateTo('menu');
+        }
+
+        /* =========================================================================
+           6. RENDER MENU UTAMA (7 KARTU MENU INTERAKTIF)
+           ========================================================================= */
+        function renderMainMenu() {
+            const menus = [
+                { id: 'materi', title: '1. MATERI', desc: 'Belajar benda padat, cair, gas & perubahan wujud', icon: 'fa-book-open', color: 'from-sky-400 to-blue-600', border: 'border-sky-300', badge: '5 Subbab' },
+                { id: 'simulasi', title: '2. SIMULASI', desc: 'Laboratorium virtual 6 perubahan wujud zat', icon: 'fa-flask', color: 'from-emerald-400 to-teal-600', border: 'border-emerald-300', badge: 'Interaktif' },
+                { id: 'praktikum', title: '3. PRAKTIKUM', desc: '4 kegiatan eksperimen ilmuwan cilik', icon: 'fa-microscope', color: 'from-amber-400 to-orange-500', border: 'border-amber-300', badge: '4 Eksperimen' },
+                { id: 'game', title: '4. GAME', desc: '3 permainan seru tebak dan kelompokkan zat', icon: 'fa-gamepad', color: 'from-purple-500 to-indigo-600', border: 'border-purple-300', badge: '3 Permainan' },
+                { id: 'lkpd', title: '5. LKPD', desc: 'Lembar Kerja Peserta Didik interaktif & cetak', icon: 'fa-clipboard-list', color: 'from-rose-400 to-pink-600', border: 'border-rose-300', badge: 'Bisa Dicetak' },
+                { id: 'evaluasi', title: '6. EVALUASI', desc: 'Kuis akhir 10 soal dengan nilai otomatis', icon: 'fa-award', color: 'from-yellow-400 to-amber-600', border: 'border-yellow-300', badge: 'Skor 100' },
+                { id: 'pengembang', title: '7. PENGEMBANG', desc: 'Profil guru & informasi aplikasi MPI', icon: 'fa-user-graduate', color: 'from-cyan-500 to-sky-700', border: 'border-cyan-300', badge: 'Profil' }
+            ];
+
+            const main = document.getElementById('main-container');
+            main.innerHTML = `
+                <div class="py-2">
+                    <!-- Banner Sapaan -->
+                    <div class="bg-white/95 border-4 border-sky-400 rounded-3xl p-4 md:p-6 mb-6 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 shrink-0">${svgCharacters.profesor.replace('w-32 h-32 md:w-40 md:h-40', 'w-16 h-16')}</div>
+                            <div>
+                                <h2 class="text-xl md:text-2xl font-black text-sky-700">Menu Utama Laboratorium Ilmuwan Cilik</h2>
+                                <p class="text-sm text-slate-600 font-semibold">Pilih salah satu kartu di bawah ini untuk memulai petualangan belajarmu!</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="navigateTo('welcome')" class="btn-3d bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-sm flex items-center gap-2">
+                                <i class="fas fa-arrow-left"></i> Halaman Depan
+                            </button>
+                            <button onclick="speakText('Selamat datang di Menu Utama! Silakan pilih kartu Materi, Simulasi, Praktikum, Game, LKPD, Evaluasi, atau Pengembang.')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2.5 rounded-2xl text-sm flex items-center gap-2">
+                                <i class="fas fa-volume-up"></i> Suara
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid 7 Kartu Menu -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                        ${menus.map(m => `
+                            <div onclick="navigateTo('${m.id}')" class="menu-card cursor-pointer bg-white border-4 ${m.border} rounded-3xl p-5 flex flex-col justify-between relative overflow-hidden group">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${m.color} text-white flex items-center justify-center text-2xl shadow-md group-hover:scale-110 transition-transform">
+                                        <i class="fas ${m.icon}"></i>
+                                    </div>
+                                    <span class="bg-slate-100 text-slate-700 text-xs font-extrabold px-3 py-1 rounded-full">${m.badge}</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-black text-slate-800 mb-1 group-hover:text-sky-600 transition-colors">${m.title}</h3>
+                                    <p class="text-sm text-slate-600 font-semibold leading-snug">${m.desc}</p>
+                                </div>
+                                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-sky-600 font-extrabold text-sm">
+                                    <span>Buka Menu</span>
+                                    <i class="fas fa-arrow-circle-right text-lg group-hover:translate-x-1 transition-transform"></i>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        /* =========================================================================
+           7. RENDER MENU MATERI (5 SUBBAB + NARASI SUARA + KUIS MINI)
+           ========================================================================= */
+        function renderMateriPage() {
+            const idx = appState.materiSubIndex;
+            const item = materiData[idx];
+            const main = document.getElementById('main-container');
+
+            main.innerHTML = `
+                <div class="py-2">
+                    <!-- Navigasi Tab Subbab -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${materiData.map((m, i) => `
+                                <button onclick="changeMateriSub(${i})" class="px-3 py-1.5 rounded-xl font-extrabold text-xs md:text-sm transition ${i === idx ? 'bg-sky-600 text-white shadow-md scale-105' : 'bg-white text-slate-600 border-2 border-slate-200 hover:bg-sky-50'}">
+                                    Subbab ${i + 1} ${appState.completedModules[m.id] ? '⭐' : ''}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Konten Kartu Materi -->
+                    <div class="bg-white border-4 border-sky-400 rounded-3xl p-5 md:p-8 shadow-xl">
+                        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b-2 border-slate-100 pb-4 mb-5">
+                            <div>
+                                <span class="bg-sky-100 text-sky-700 font-black text-xs px-3 py-1 rounded-full">${item.subbab}</span>
+                                <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-1">${item.title}</h2>
+                            </div>
+                            <button onclick="speakText(\`${item.narration}\`)" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2 shrink-0">
+                                <i class="fas fa-volume-up text-lg"></i> Bacakan Materi
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                            <!-- Kolom Ilustrasi -->
+                            <div class="bg-gradient-to-b from-sky-50 to-amber-50 border-2 border-sky-200 rounded-3xl p-6 text-center">
+                                ${item.illustration}
+                                <p class="text-xs font-extrabold text-sky-700 mt-3">Ilustrasi Laboratorium IPAS</p>
+                            </div>
+
+                            <!-- Kolom Penjelasan Materi -->
+                            <div class="lg:col-span-2">
+                                ${item.content}
+                            </div>
+                        </div>
+
+                        <!-- Kuis Mini Subbab -->
+                        <div class="mt-6 bg-gradient-to-r from-amber-50 to-yellow-50 border-3 border-amber-300 rounded-3xl p-5">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-black text-amber-800 text-base md:text-lg flex items-center gap-2">
+                                    <i class="fas fa-lightbulb text-amber-500"></i> Kuis Mini Pemahaman
+                                </h4>
+                                <button onclick="speakText(\`Kuis mini: ${item.quiz.question}\`)" class="text-xs bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold px-3 py-1 rounded-full">
+                                    <i class="fas fa-volume-up"></i> Baca Soal
+                                </button>
+                            </div>
+                            <p class="font-bold text-slate-800 mb-3">${item.quiz.question}</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                ${item.quiz.options.map((opt, oIdx) => `
+                                    <button onclick="checkMateriQuiz(${idx}, ${oIdx})" class="btn-3d bg-white hover:bg-sky-50 border-2 border-amber-300 text-slate-800 font-extrabold py-2.5 px-4 rounded-2xl text-sm text-left">
+                                        ${String.fromCharCode(65 + oIdx)}. ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Tombol Sebelumnya & Berikutnya -->
+                        <div class="mt-6 pt-4 border-t-2 border-slate-100 flex justify-between items-center">
+                            <button onclick="changeMateriSub(${idx - 1})" ${idx === 0 ? 'disabled' : ''} class="btn-3d ${idx === 0 ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-sky-500 hover:bg-sky-600 text-white'} font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-chevron-left"></i> Sebelumnya
+                            </button>
+                            <span class="text-sm font-extrabold text-slate-500">Halaman ${idx + 1} dari ${materiData.length}</span>
+                            ${idx < materiData.length - 1 ? `
+                                <button onclick="changeMateriSub(${idx + 1})" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                    Berikutnya <i class="fas fa-chevron-right"></i>
+                                </button>
+                            ` : `
+                                <button onclick="navigateTo('simulasi')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                    Lanjut ke Simulasi <i class="fas fa-flask"></i>
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeMateriSub(newIdx) {
+            if (newIdx < 0 || newIdx >= materiData.length) return;
+            playSFX('click');
+            stopSpeech();
+            appState.materiSubIndex = newIdx;
+            renderMateriPage();
+        }
+
+        function checkMateriQuiz(subIdx, selectedIdx) {
+            const quiz = materiData[subIdx].quiz;
+            const modId = materiData[subIdx].id;
+            if (selectedIdx === quiz.answer) {
+                playSFX('correct');
+                addStars(2, modId);
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+                speakText('Hebat! ' + quiz.explanation);
+                showFeedbackModal('success', 'HEBAT! +2 Bintang ⭐', quiz.explanation);
+            } else {
+                playSFX('wrong');
+                speakText('Belum tepat, ayo coba lagi! Perhatikan ciri-ciri benda pada materi di atas.');
+                showFeedbackModal('error', 'Yuk Coba Lagi!', 'Jawaban belum tepat. Coba baca kembali penjelasan di atas ya!');
+            }
+        }
+
+        /* =========================================================================
+           8. RENDER MENU SIMULASI (LABORATORIUM VIRTUAL 6 PERUBAHAN WUJUD)
+           ========================================================================= */
+        let simTimer = null;
+        let simProgress = 0;
+        let simState = 'idle'; // idle, running, paused, finished
+
+        function renderSimulasiPage() {
+            clearInterval(simTimer);
+            simTimer = null;
+            simProgress = 0;
+            simState = 'idle';
+
+            const idx = appState.simulasiIndex;
+            const sim = simulasiData[idx];
+            const main = document.getElementById('main-container');
+
+            main.innerHTML = `
+                <div class="py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${simulasiData.map((s, i) => `
+                                <button onclick="selectSimulasi(${i})" class="px-3 py-1.5 rounded-xl font-extrabold text-xs md:text-sm transition ${i === idx ? 'bg-emerald-600 text-white shadow' : 'bg-white text-slate-700 border-2 border-emerald-200 hover:bg-emerald-50'}">
+                                    ${i + 1}. ${s.id.charAt(0).toUpperCase() + s.id.slice(1)}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-4 border-emerald-400 rounded-3xl p-5 md:p-8 shadow-xl">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-5">
+                            <div>
+                                <span class="bg-emerald-100 text-emerald-800 font-black text-xs px-3 py-1 rounded-full">🔬 LABORATORIUM VIRTUAL</span>
+                                <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-1">${sim.title}</h2>
+                            </div>
+                            <button onclick="speakText(\`${sim.narration}\`)" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-volume-up"></i> Narasi Suara
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                            <!-- Area Kanvas Animasi Interaktif -->
+                            <div class="bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-sky-400 rounded-3xl p-6 text-white relative overflow-hidden min-h-[290px] flex flex-col justify-between items-center">
+                                <div class="w-full flex justify-between items-center text-xs font-bold text-sky-300">
+                                    <span>STATUS: <span id="sim-status-badge" class="text-amber-300">SIAP DIUJI</span></span>
+                                    <span>PROSES: <span id="sim-pct-label">0%</span></span>
+                                </div>
+
+                                <!-- Visual Animasi Dinamis Sesuai Jenis Simulasi -->
+                                <div id="sim-visual-stage" onclick="startSimulation()" class="my-4 cursor-pointer flex flex-col items-center justify-center w-full h-44 relative" title="Klik objek untuk memulai!">
+                                    ${getSimVisualHTML(sim.id, 0)}
+                                </div>
+
+                                <!-- Progress Bar Simulasi -->
+                                <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden">
+                                    <div id="sim-progress-bar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-3 transition-all duration-150" style="width: 0%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Panel Kontrol & Penjelasan Ilmiah -->
+                            <div class="space-y-4">
+                                <div class="bg-sky-50 border-2 border-sky-200 p-4 rounded-2xl">
+                                    <p class="text-xs font-black text-sky-700 uppercase mb-1">Petunjuk Interaksi:</p>
+                                    <p class="font-bold text-slate-800 text-sm">Klik objek di layar laboratorium atau tekan tombol <b>MULAI</b> di bawah ini!</p>
+                                </div>
+
+                                <!-- Tombol MULAI, JEDA, ULANGI -->
+                                <div class="flex flex-wrap gap-3">
+                                    <button onclick="startSimulation()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-black px-6 py-3 rounded-2xl flex items-center gap-2">
+                                        <i class="fas fa-play"></i> MULAI
+                                    </button>
+                                    <button onclick="pauseSimulation()" class="btn-3d bg-amber-400 hover:bg-amber-500 text-white font-black px-6 py-3 rounded-2xl flex items-center gap-2">
+                                        <i class="fas fa-pause"></i> JEDA
+                                    </button>
+                                    <button onclick="resetSimulation()" class="btn-3d bg-rose-500 hover:bg-rose-600 text-white font-black px-6 py-3 rounded-2xl flex items-center gap-2">
+                                        <i class="fas fa-redo"></i> ULANGI
+                                    </button>
+                                </div>
+
+                                <div class="bg-amber-50 border-2 border-amber-300 p-4 rounded-2xl">
+                                    <h4 class="font-black text-amber-800 mb-1">📖 Penjelasan Proses:</h4>
+                                    <p class="text-sm md:text-base font-semibold text-slate-700 leading-relaxed">${sim.processDesc}</p>
+                                </div>
+
+                                <div class="bg-emerald-50 border-2 border-emerald-300 p-4 rounded-2xl">
+                                    <h4 class="font-black text-emerald-800 mb-1">✅ Kesimpulan Sederhana:</h4>
+                                    <p class="text-sm md:text-base font-bold text-emerald-900">${sim.conclusion}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getSimVisualHTML(type, pct) {
+            const scaleDown = Math.max(0.15, 1 - (pct / 100) * 0.85);
+            const scaleUp = Math.min(1.2, 0.2 + (pct / 100));
+
+            if (type === 'mencair') {
+                return `
+                    <div class="text-amber-300 text-2xl mb-2 ${pct > 0 ? 'animate-pulse' : ''}">☀️ Energi Panas (+ Kalor)</div>
+                    <div class="relative flex flex-col items-center justify-end h-28 w-44">
+                        <!-- Es Batu Mengecil -->
+                        <div style="transform: scale(${scaleDown}); transition: transform 0.2s;" class="w-20 h-20 bg-gradient-to-br from-sky-200 to-sky-500 rounded-2xl border-2 border-white flex items-center justify-center text-3xl shadow-lg z-10">
+                            🧊
+                        </div>
+                        <!-- Genangan Air Membesar -->
+                        <div style="width: ${30 + pct * 1.3}px; height: ${6 + pct * 0.14}px; transition: all 0.2s;" class="bg-blue-400 rounded-full mt-1 shadow-inner"></div>
+                    </div>
+                    <p class="text-xs font-bold text-sky-200 mt-2">${pct < 50 ? 'Wujud: Benda Padat (Es Batu)' : pct < 100 ? 'Es mulai meleleh menjadi air...' : 'Wujud Akhir: Benda Cair (Air) 💧'}</p>
+                `;
+            } else if (type === 'membeku') {
+                return `
+                    <div class="text-cyan-300 text-xl mb-2 ${pct > 0 ? 'animate-pulse' : ''}">❄️ Suhu Freezer Sangat Dingin (-5°C)</div>
+                    <div class="relative flex items-center justify-center h-28 w-44 bg-sky-950/80 border-2 border-cyan-400 rounded-2xl">
+                        ${pct < 65 ? `
+                            <div class="text-5xl transition-all" style="opacity: ${1 - pct/100}">💧</div>
+                        ` : `
+                            <div class="text-6xl animate-bounce">🧊</div>
+                        `}
+                    </div>
+                    <p class="text-xs font-bold text-cyan-200 mt-2">${pct < 65 ? 'Wujud: Benda Cair (Air melepaskan panas)' : 'Wujud Akhir: Benda Padat (Es Batu) 🧊'}</p>
+                `;
+            } else if (type === 'menguap') {
+                return `
+                    <div class="relative flex flex-col items-center justify-end h-32 w-48">
+                        <!-- Uap Air Naik -->
+                        <div class="flex gap-3 text-2xl mb-1" style="opacity: ${pct / 100}; transform: translateY(-${pct * 0.2}px);">
+                            <span>♨️</span><span>☁️</span><span>♨️</span>
+                        </div>
+                        <!-- Panci Air -->
+                        <div class="w-32 h-12 bg-slate-400 rounded-b-2xl border-t-4 border-blue-400 flex items-center justify-center text-xs font-black text-slate-900">
+                            AIR MENDIDIH
+                        </div>
+                        <!-- Api Kompor -->
+                        <div class="text-2xl mt-1 ${pct > 0 ? 'animate-bounce' : 'opacity-40'}">🔥🔥🔥</div>
+                    </div>
+                    <p class="text-xs font-bold text-amber-200 mt-1">${pct < 40 ? 'Air dipanaskan di atas kompor' : 'Air berubah menjadi Uap Air (Gas) ♨️'}</p>
+                `;
+            } else if (type === 'mengembun') {
+                return `
+                    <div class="relative flex items-center justify-center h-32 w-48">
+                        <div class="w-24 h-28 bg-sky-200/30 border-4 border-sky-300 rounded-b-2xl flex flex-col items-center justify-center relative">
+                            <span class="text-3xl">🧊</span>
+                            <span class="text-[10px] font-bold">Gelas Es</span>
+                            <!-- Titik-titik embun di luar gelas -->
+                            <div style="opacity: ${pct / 100}" class="absolute -left-3 top-4 text-sm">💧</div>
+                            <div style="opacity: ${pct / 100}" class="absolute -right-3 top-8 text-sm">💧</div>
+                            <div style="opacity: ${pct / 100}" class="absolute -left-2 bottom-4 text-sm">💧</div>
+                            <div style="opacity: ${pct / 100}" class="absolute -right-2 bottom-3 text-sm">💧</div>
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold text-sky-200 mt-1">${pct < 40 ? 'Uap air (gas) menyentuh gelas dingin' : 'Terbentuk titik-titik air (embun) di luar gelas 💧'}</p>
+                `;
+            } else if (type === 'menyublim') {
+                return `
+                    <div class="relative flex flex-col items-center justify-center h-32 w-48">
+                        <div style="opacity: ${pct / 100}; transform: translateY(-${pct * 0.15}px);" class="text-xl text-purple-300 mb-2">
+                            ✨ Gas Harum ✨
+                        </div>
+                        <div style="transform: scale(${scaleDown});" class="w-16 h-16 rounded-full bg-white border-4 border-purple-300 flex items-center justify-center text-slate-800 font-black text-xs shadow-lg">
+                            Kapur Barus
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold text-purple-200 mt-1">${pct < 50 ? 'Kapur barus (padat) menyerap panas' : 'Kapur barus mengecil dan berubah menjadi gas! 💨'}</p>
+                `;
+            } else {
+                return `
+                    <div class="relative flex flex-col items-center justify-center h-32 w-48">
+                        <div class="text-xs text-cyan-200 mb-2">❄️ Awan Dingin (-10°C) ❄️</div>
+                        ${pct < 60 ? `
+                            <div class="text-4xl">☁️ Uap Air</div>
+                        ` : `
+                            <div class="flex gap-3 text-4xl animate-pulse">❄️ ❄️ ❄️</div>
+                        `}
+                    </div>
+                    <p class="text-xs font-bold text-teal-200 mt-1">${pct < 60 ? 'Uap air (gas) melepaskan panas di awan dingin' : 'Uap air berubah langsung menjadi Kristal Salju (Padat) ❄️'}</p>
+                `;
+            }
+        }
+
+        function selectSimulasi(idx) {
+            playSFX('click');
+            stopSpeech();
+            appState.simulasiIndex = idx;
+            renderSimulasiPage();
+        }
+
+        function startSimulation() {
+            if (simState === 'running') return;
+            playSFX('click');
+            if (simProgress >= 100) simProgress = 0;
+            simState = 'running';
+
+            const sim = simulasiData[appState.simulasiIndex];
+            speakText(sim.narration);
+
+            document.getElementById('sim-status-badge').textContent = 'SEDANG BERJALAN...';
+            simTimer = setInterval(() => {
+                simProgress += 4;
+                if (simProgress >= 100) {
+                    simProgress = 100;
+                    clearInterval(simTimer);
+                    simState = 'finished';
+                    document.getElementById('sim-status-badge').textContent = 'SELESAI ✅';
+                    playSFX('correct');
+                    addStars(3, 'simulasi');
+                }
+                document.getElementById('sim-pct-label').textContent = simProgress + '%';
+                document.getElementById('sim-progress-bar').style.width = simProgress + '%';
+                document.getElementById('sim-visual-stage').innerHTML = getSimVisualHTML(sim.id, simProgress);
+            }, 220);
+        }
+
+        function pauseSimulation() {
+            playSFX('click');
+            if (simState === 'running') {
+                clearInterval(simTimer);
+                simState = 'paused';
+                document.getElementById('sim-status-badge').textContent = 'DIJEDA ⏸️';
+            }
+        }
+
+        function resetSimulation() {
+            playSFX('click');
+            clearInterval(simTimer);
+            simProgress = 0;
+            simState = 'idle';
+            const sim = simulasiData[appState.simulasiIndex];
+            document.getElementById('sim-status-badge').textContent = 'SIAP DIUJI';
+            document.getElementById('sim-pct-label').textContent = '0%';
+            document.getElementById('sim-progress-bar').style.width = '0%';
+            document.getElementById('sim-visual-stage').innerHTML = getSimVisualHTML(sim.id, 0);
+        }
+
+        /* =========================================================================
+           9. RENDER MENU PRAKTIKUM (4 EKSPERIMEN + PERINGATAN KESELAMATAN)
+           ========================================================================= */
+        function renderPraktikumPage() {
+            const idx = appState.praktikumIndex;
+            const prak = praktikumData[idx];
+            const main = document.getElementById('main-container');
+
+            const fullNarration = `${prak.title}. ${prak.safety}. Tujuan kegiatan: ${prak.goal}. Langkah percobaan: ${prak.steps.join(' ')}. Kesimpulan: ${prak.conclusion}`;
+
+            main.innerHTML = `
+                <div class="py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${praktikumData.map((p, i) => `
+                                <button onclick="selectPraktikum(${i})" class="px-3 py-1.5 rounded-xl font-extrabold text-xs md:text-sm transition ${i === idx ? 'bg-orange-500 text-white shadow' : 'bg-white text-slate-700 border-2 border-orange-200 hover:bg-orange-50'}">
+                                    Praktikum ${i + 1}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-4 border-orange-400 rounded-3xl p-5 md:p-8 shadow-xl">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+                            <div>
+                                <span class="bg-orange-100 text-orange-800 font-black text-xs px-3 py-1 rounded-full">🥼 LABORATORIUM ILMUWAN CILIK</span>
+                                <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-1">${prak.icon} ${prak.title}</h2>
+                            </div>
+                            <button onclick="speakText(\`${fullNarration}\`)" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-volume-up"></i> Bacakan Panduan
+                            </button>
+                        </div>
+
+                        <!-- Kotak Peringatan Keselamatan -->
+                        <div class="bg-rose-100 border-l-8 border-rose-600 text-rose-900 p-4 rounded-2xl mb-5 font-bold text-sm md:text-base shadow-sm">
+                            ${prak.safety}
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Kiri: Tujuan, Alat & Langkah -->
+                            <div class="space-y-4">
+                                <div class="bg-sky-50 border-2 border-sky-200 p-4 rounded-2xl">
+                                    <h4 class="font-black text-sky-800 mb-1">🎯 Tujuan Kegiatan:</h4>
+                                    <p class="text-sm md:text-base font-semibold text-slate-700">${prak.goal}</p>
+                                </div>
+
+                                <div class="bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
+                                    <h4 class="font-black text-amber-800 mb-2">🧰 Alat dan Bahan:</h4>
+                                    <ul class="list-disc list-inside space-y-1 text-sm md:text-base font-semibold text-slate-700">
+                                        ${prak.tools.map(t => `<li>${t}</li>`).join('')}
+                                    </ul>
+                                </div>
+
+                                <div class="bg-emerald-50 border-2 border-emerald-200 p-4 rounded-2xl">
+                                    <h4 class="font-black text-emerald-800 mb-2">👣 Langkah-Langkah Percobaan:</h4>
+                                    <ol class="list-decimal list-inside space-y-1.5 text-sm md:text-base font-semibold text-slate-700">
+                                        ${prak.steps.map(s => `<li>${s}</li>`).join('')}
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <!-- Kanan: Tabel Pengamatan, Pertanyaan Pemantik & Kesimpulan -->
+                            <div class="space-y-4">
+                                <div class="bg-white border-2 border-slate-300 rounded-2xl overflow-hidden">
+                                    <div class="bg-slate-800 text-white font-black px-4 py-2.5 text-sm">
+                                        📊 Tabel Pengamatan Hasil Percobaan
+                                    </div>
+                                    <table class="w-full text-left text-sm">
+                                        <thead class="bg-slate-100 border-b border-slate-200">
+                                            <tr>
+                                                <th class="p-3 font-extrabold text-slate-700">Waktu / Tahap</th>
+                                                <th class="p-3 font-extrabold text-slate-700">Hasil Pengamatan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-200">
+                                            ${prak.tableRows.map(r => `
+                                                <tr>
+                                                    <td class="p-3 font-bold text-sky-700">${r.waktu}</td>
+                                                    <td class="p-3 font-semibold text-slate-700">${r.kondisi}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="bg-purple-50 border-2 border-purple-300 p-4 rounded-2xl">
+                                    <h4 class="font-black text-purple-800 mb-1">❓ Pertanyaan Pemantik Diskusi:</h4>
+                                    <p class="text-sm md:text-base font-bold text-purple-950">"${prak.triggerQuestion}"</p>
+                                </div>
+
+                                <div class="bg-teal-50 border-2 border-teal-300 p-4 rounded-2xl">
+                                    <h4 class="font-black text-teal-800 mb-1">💡 Kesimpulan Percobaan:</h4>
+                                    <p class="text-sm md:text-base font-semibold text-slate-800">${prak.conclusion}</p>
+                                </div>
+
+                                <button onclick="completePraktikum()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3.5 rounded-2xl text-base flex items-center justify-center gap-2">
+                                    <i class="fas fa-check-circle"></i> Saya Sudah Memahami Praktikum Ini (+3 Bintang)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectPraktikum(idx) {
+            playSFX('click');
+            stopSpeech();
+            appState.praktikumIndex = idx;
+            renderPraktikumPage();
+        }
+
+        function completePraktikum() {
+            playSFX('correct');
+            addStars(3, 'praktikum');
+            confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
+            speakText('Hebat sekali Ilmuwan Cilik! Kamu mendapatkan 3 bintang penghargaan.');
+            showFeedbackModal('success', 'ILMUWAN CILIK HEBAT! ⭐', 'Kamu telah menyelesaikan panduan praktikum laboratorium dengan baik!');
+        }
+
+        /* =========================================================================
+           10. RENDER MENU GAME (3 PERMAINAN EDUKATIF INTERAKTIF)
+           ========================================================================= */
+        function renderGameHub() {
+            const tab = appState.gameTab;
+            if (tab === 'game1') return renderGame1();
+            if (tab === 'game2') return renderGame2();
+            if (tab === 'game3') return renderGame3();
+
+            const main = document.getElementById('main-container');
+            main.innerHTML = `
+                <div class="py-2">
+                    <div class="flex items-center justify-between mb-4">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <button onclick="speakText('Selamat datang di Arena Bermain Ilmuwan Cilik! Pilih salah satu dari tiga permainan seru: Kelompokkan Bendanya, Tebak Wujud Zat, atau Petualangan Ilmuwan Cilik.')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-volume-up"></i> Instruksi Game
+                        </button>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <h2 class="text-3xl font-black text-purple-700">🎮 ARENA BERMAIN ILMUWAN CILIK</h2>
+                        <p class="text-slate-600 font-bold">Belajar sambil bermain dan kumpulkan bintang sebanyak-banyaknya!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Kartu Game 1 -->
+                        <div class="menu-card bg-white border-4 border-sky-400 rounded-3xl p-6 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="text-6xl mb-3">🧺</div>
+                                <span class="bg-sky-100 text-sky-700 font-black text-xs px-3 py-1 rounded-full">DRAG & DROP / KLIK</span>
+                                <h3 class="text-2xl font-black text-slate-800 mt-2 mb-2">GAME 1: KELOMPOKKAN BENDANYA</h3>
+                                <p class="text-sm text-slate-600 font-semibold mb-4">Masukkan 15 gambar benda ke dalam keranjang Padat, Cair, atau Gas dengan tepat!</p>
+                            </div>
+                            <button onclick="startGame1()" class="btn-3d w-full bg-sky-500 hover:bg-sky-600 text-white font-black py-3.5 rounded-2xl text-base">
+                                <i class="fas fa-play mr-1"></i> MAIN SEKARANG
+                            </button>
+                        </div>
+
+                        <!-- Kartu Game 2 -->
+                        <div class="menu-card bg-white border-4 border-amber-400 rounded-3xl p-6 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="text-6xl mb-3">🕵️‍♂️</div>
+                                <span class="bg-amber-100 text-amber-800 font-black text-xs px-3 py-1 rounded-full">10 TEKA-TEKI</span>
+                                <h3 class="text-2xl font-black text-slate-800 mt-2 mb-2">GAME 2: TEBAK WUJUD ZAT</h3>
+                                <p class="text-sm text-slate-600 font-semibold mb-4">Baca petunjuk detektif dan tebak siapakah aku dari 10 soal bergambar!</p>
+                            </div>
+                            <button onclick="startGame2()" class="btn-3d w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3.5 rounded-2xl text-base">
+                                <i class="fas fa-play mr-1"></i> MAIN SEKARANG
+                            </button>
+                        </div>
+
+                        <!-- Kartu Game 3 -->
+                        <div class="menu-card bg-white border-4 border-emerald-400 rounded-3xl p-6 text-center flex flex-col justify-between">
+                            <div>
+                                <div class="text-6xl mb-3">🏆</div>
+                                <span class="bg-emerald-100 text-emerald-800 font-black text-xs px-3 py-1 rounded-full">10 TANTANGAN BERTINGKAT</span>
+                                <h3 class="text-2xl font-black text-slate-800 mt-2 mb-2">GAME 3: PETUALANGAN ILMUWAN CILIK</h3>
+                                <p class="text-sm text-slate-600 font-semibold mb-4">Taklukkan 10 level tantangan dan raih piagam penghargaan ILMUWAN CILIK!</p>
+                            </div>
+                            <button onclick="startGame3()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3.5 rounded-2xl text-base">
+                                <i class="fas fa-play mr-1"></i> MAIN SEKARANG
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- LOGIKA GAME 1: KELOMPOKKAN BENDANYA (15 BENDA DRAG & DROP + TAP SUPPORT) ---
+        let g1Remaining = [];
+        let g1Placed = { Padat: [], Cair: [], Gas: [] };
+        let g1SelectedItem = null; // Mendukung klik/tap di HP selain drag-and-drop
+
+        function startGame1() {
+            playSFX('click');
+            g1Remaining = [...fifteenItems].sort(() => Math.random() - 0.5);
+            g1Placed = { Padat: [], Cair: [], Gas: [] };
+            g1SelectedItem = null;
+            appState.gameTab = 'game1';
+            speakText('Game 1: Kelompokkan Bendanya! Tarik atau klik 15 gambar benda, lalu masukkan ke dalam kotak Padat, Cair, atau Gas.');
+            renderGame1();
+        }
+
+        function renderGame1() {
+            const main = document.getElementById('main-container');
+            const totalDone = 15 - g1Remaining.length;
+
+            main.innerHTML = `
+                <div class="py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <button onclick="appState.gameTab='menu'; renderGameHub();" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Pilih Game Lain
+                        </button>
+                        <div class="bg-white border-2 border-sky-400 px-4 py-1.5 rounded-2xl font-black text-sky-700 text-sm">
+                            Terkelompok: ${totalDone} / 15 Benda
+                        </div>
+                        <button onclick="startGame1()" class="btn-3d bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-2 rounded-2xl text-sm">
+                            <i class="fas fa-redo"></i> Ulangi
+                        </button>
+                    </div>
+
+                    <div class="bg-white border-4 border-sky-400 rounded-3xl p-4 md:p-6 shadow-xl">
+                        <h3 class="text-xl md:text-2xl font-black text-center text-sky-700 mb-1">🧺 GAME 1: KELOMPOKKAN BENDANYA</h3>
+                        <p class="text-center text-xs md:text-sm font-bold text-slate-600 mb-4">
+                            Tarik (Drag) benda ke kotak yang tepat, atau <b>klik benda lalu klik kotak tujuannya</b>!
+                        </p>
+
+                        <!-- Area Item yang Belum Dikelompokkan -->
+                        <div class="bg-slate-100 border-2 border-dashed border-slate-300 rounded-2xl p-3 mb-5 min-h-[110px]">
+                            ${g1Remaining.length > 0 ? `
+                                <div class="flex flex-wrap justify-center gap-2.5">
+                                    ${g1Remaining.map(item => `
+                                        <div draggable="true"
+                                             ondragstart="handleDragStart(event, '${item.id}')"
+                                             onclick="selectG1Item('${item.id}')"
+                                             class="draggable-item ${g1SelectedItem === item.id ? 'ring-4 ring-orange-500 bg-amber-100' : 'bg-white'} border-2 border-sky-300 rounded-2xl px-3 py-2 flex flex-col items-center shadow-sm hover:shadow-md">
+                                            <span class="text-3xl">${item.emoji}</span>
+                                            <span class="text-xs font-extrabold text-slate-800 mt-1">${item.name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : `
+                                <div class="text-center py-4">
+                                    <div class="text-5xl mb-2">🎉🏆🎉</div>
+                                    <h4 class="text-2xl font-black text-emerald-600">HEBAT! SEMUA 15 BENDA BERHASIL DIKELOMPOKKAN!</h4>
+                                    <button onclick="startGame1()" class="btn-3d mt-3 bg-sky-500 text-white font-extrabold px-6 py-2.5 rounded-2xl">Main Lagi</button>
+                                </div>
+                            `}
+                        </div>
+
+                        <!-- 3 Zona Drop: Padat, Cair, Gas -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${['Padat', 'Cair', 'Gas'].map(cat => {
+                                const styleMap = {
+                                    Padat: { bg: 'bg-amber-50', border: 'border-amber-400', head: 'bg-amber-500', icon: '🧱' },
+                                    Cair: { bg: 'bg-blue-50', border: 'border-blue-400', head: 'bg-blue-500', icon: '💧' },
+                                    Gas: { bg: 'bg-emerald-50', border: 'border-emerald-400', head: 'bg-emerald-500', icon: '🎈' }
+                                }[cat];
+                                return `
+                                    <div ondragover="event.preventDefault(); this.classList.add('drag-over');"
+                                         ondragleave="this.classList.remove('drag-over');"
+                                         ondrop="handleDropG1(event, '${cat}'); this.classList.remove('drag-over');"
+                                         onclick="handleZoneClickG1('${cat}')"
+                                         class="drop-zone cursor-pointer ${styleMap.bg} border-4 ${styleMap.border} rounded-3xl overflow-hidden min-h-[210px] flex flex-col transition">
+                                        <div class="${styleMap.head} text-white font-black py-2.5 px-4 text-center text-lg">
+                                            ${styleMap.icon} BENDA ${cat.toUpperCase()} (${g1Placed[cat].length})
+                                        </div>
+                                        <div class="p-3 flex flex-wrap gap-2 justify-center items-start flex-grow">
+                                            ${g1Placed[cat].map(p => `
+                                                <span class="bg-white border border-slate-300 px-2.5 py-1 rounded-xl text-xs font-extrabold flex items-center gap-1 shadow-sm">
+                                                    ${p.emoji} ${p.name} ✅
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleDragStart(e, itemId) {
+            e.dataTransfer.setData('text/plain', itemId);
+            g1SelectedItem = itemId;
+        }
+
+        function selectG1Item(itemId) {
+            playSFX('click');
+            g1SelectedItem = (g1SelectedItem === itemId) ? null : itemId;
+            renderGame1();
+        }
+
+        function handleDropG1(e, targetCategory) {
+            e.preventDefault();
+            const itemId = e.dataTransfer.getData('text/plain') || g1SelectedItem;
+            if (itemId) verifyG1Placement(itemId, targetCategory);
+        }
+
+        function handleZoneClickG1(targetCategory) {
+            if (g1SelectedItem) {
+                verifyG1Placement(g1SelectedItem, targetCategory);
+            }
+        }
+
+        function verifyG1Placement(itemId, targetCategory) {
+            const idx = g1Remaining.findIndex(i => i.id === itemId);
+            if (idx === -1) return;
+            const item = g1Remaining[idx];
+
+            if (item.type === targetCategory) {
+                playSFX('correct');
+                g1Remaining.splice(idx, 1);
+                g1Placed[targetCategory].push(item);
+                g1SelectedItem = null;
+                speakText(`Hebat! ${item.name} memang termasuk benda ${targetCategory}.`);
+
+                if (g1Remaining.length === 0) {
+                    playSFX('win');
+                    addStars(5, 'game1');
+                    confetti({ particleCount: 90, spread: 80, origin: { y: 0.6 } });
+                    showFeedbackModal('success', 'HEBAT! +5 Bintang ⭐', 'Kamu berhasil mengelompokkan semua 15 benda dengan benar!');
+                }
+                renderGame1();
+            } else {
+                playSFX('wrong');
+                g1SelectedItem = null;
+                const hintMap = {
+                    Padat: `${item.name} memiliki bentuk dan volume yang tetap, sehingga termasuk Benda Padat.`,
+                    Cair: `${item.name} dapat mengalir dan bentuknya mengikuti wadah, sehingga termasuk Benda Cair.`,
+                    Gas: `${item.name} menyebar mengisi seluruh ruangan, sehingga termasuk Benda Gas.`
+                };
+                speakText(`Ups, belum tepat! ${hintMap[item.type]} Ayo coba masukkan ke kotak yang benar!`);
+                showFeedbackModal('error', 'Yuk Coba Lagi!', `Belum tepat! Ingat ya: ${hintMap[item.type]}`);
+                renderGame1();
+            }
+        }
+
+        // --- LOGIKA GAME 2: TEBAK WUJUD ZAT (10 PERTANYAAN) ---
+        let g2Idx = 0;
+        let g2Score = 0;
+
+        function startGame2() {
+            playSFX('click');
+            g2Idx = 0;
+            g2Score = 0;
+            appState.gameTab = 'game2';
+            speakText('Game 2: Tebak Wujud Zat! Dengarkan petunjuknya dan pilih jawaban yang benar.');
+            renderGame2();
+        }
+
+        function renderGame2() {
+            const main = document.getElementById('main-container');
+            if (g2Idx >= game2Questions.length) {
+                playSFX('win');
+                addStars(5, 'game2');
+                confetti({ particleCount: 80, spread: 70 });
+                main.innerHTML = `
+                    <div class="bg-white border-4 border-amber-400 rounded-3xl p-8 max-w-xl mx-auto text-center shadow-2xl my-4">
+                        <div class="text-6xl mb-3">🕵️‍♂️🌟</div>
+                        <h2 class="text-3xl font-black text-amber-600 mb-2">DETEKTIF WUJUD ZAT HEBAT!</h2>
+                        <p class="text-lg font-extrabold text-slate-700 mb-4">Skor Akhir Kamu: <span class="text-sky-600 text-2xl">${g2Score} / 100</span></p>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="startGame2()" class="btn-3d bg-amber-500 text-white font-extrabold px-6 py-3 rounded-2xl">Main Lagi</button>
+                            <button onclick="appState.gameTab='menu'; renderGameHub();" class="btn-3d bg-sky-500 text-white font-extrabold px-6 py-3 rounded-2xl">Menu Game</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = game2Questions[g2Idx];
+            main.innerHTML = `
+                <div class="py-2 max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <button onclick="appState.gameTab='menu'; renderGameHub();" class="btn-3d bg-slate-600 text-white font-bold px-4 py-2 rounded-2xl text-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                        <span class="bg-amber-100 border-2 border-amber-400 px-4 py-1.5 rounded-2xl font-black text-amber-800 text-sm">
+                            Soal ${g2Idx + 1} / 10 • Skor: ${g2Score}
+                        </span>
+                    </div>
+
+                    <div class="bg-white border-4 border-amber-400 rounded-3xl p-6 md:p-8 shadow-xl text-center">
+                        <div class="text-7xl mb-4 animate-float">${q.emoji}</div>
+                        <div class="bg-amber-50 border-2 border-amber-200 p-5 rounded-2xl mb-5">
+                            <p class="text-lg md:text-xl font-extrabold text-slate-800 leading-relaxed">"${q.clue}"</p>
+                            <button onclick="speakText(\`${q.clue}\`)" class="mt-3 bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-1.5 rounded-full">
+                                <i class="fas fa-volume-up"></i> Bacakan Petunjuk
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            ${q.options.map((opt, i) => `
+                                <button onclick="answerGame2(${i})" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-black py-4 px-4 rounded-2xl text-lg">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerGame2(selected) {
+            const q = game2Questions[g2Idx];
+            if (selected === q.answer) {
+                playSFX('correct');
+                g2Score += 10;
+                g2Idx++;
+                speakText('Hebat! Jawabanmu benar.');
+                renderGame2();
+            } else {
+                playSFX('wrong');
+                speakText('Belum tepat, coba tebak sekali lagi!');
+                showFeedbackModal('error', 'Kurang Tepat!', 'Coba baca lagi petunjuk sifat bendanya dengan teliti ya!');
+            }
+        }
+
+        // --- LOGIKA GAME 3: PETUALANGAN ILMUWAN CILIK (10 LEVEL BERTINGKAT) ---
+        let g3Level = 0;
+        let g3Stars = 0;
+
+        function startGame3() {
+            playSFX('click');
+            g3Level = 0;
+            g3Stars = 0;
+            appState.gameTab = 'game3';
+            speakText('Game 3: Petualangan Ilmuwan Cilik! Selesaikan 10 tantangan bertingkat untuk meraih penghargaan Ilmuwan Cilik.');
+            renderGame3();
+        }
+
+        function renderGame3() {
+            const main = document.getElementById('main-container');
+            if (g3Level >= game3Challenges.length) {
+                playSFX('win');
+                addStars(5, 'game3');
+                confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
+                speakText('Selamat! Kamu berhasil menyelesaikan seluruh tantangan dan meraih penghargaan Ilmuwan Cilik!');
+                main.innerHTML = `
+                    <div class="bg-gradient-to-b from-yellow-50 to-amber-100 border-4 border-amber-500 rounded-3xl p-8 max-w-2xl mx-auto text-center shadow-2xl my-4">
+                        <div class="text-7xl mb-2">🏅🎓🏅</div>
+                        <span class="bg-amber-500 text-white font-black px-4 py-1 rounded-full text-xs">PIAGAM PENGHARGAAN</span>
+                        <h2 class="text-3xl md:text-4xl font-black text-amber-800 mt-3 mb-2">ILMUWAN CILIK HEBAT!</h2>
+                        <p class="text-base font-bold text-slate-700 mb-3">Telah berhasil menaklukkan 10 Tantangan Dunia Wujud Zat dengan perolehan:</p>
+                        <div class="text-3xl font-black text-amber-500 mb-5">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (${g3Stars} Bintang)</div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="startGame3()" class="btn-3d bg-emerald-500 text-white font-extrabold px-6 py-3 rounded-2xl">Ulangi Petualangan</button>
+                            <button onclick="appState.gameTab='menu'; renderGameHub();" class="btn-3d bg-sky-500 text-white font-extrabold px-6 py-3 rounded-2xl">Menu Game</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const ch = game3Challenges[g3Level];
+            main.innerHTML = `
+                <div class="py-2 max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <button onclick="appState.gameTab='menu'; renderGameHub();" class="btn-3d bg-slate-600 text-white font-bold px-4 py-2 rounded-2xl text-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                        <div class="bg-emerald-100 border-2 border-emerald-400 px-4 py-1.5 rounded-2xl font-black text-emerald-800 text-sm">
+                            Level ${ch.level} / 10 • Bintang: ⭐ ${g3Stars}
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-4 border-emerald-400 rounded-3xl p-6 md:p-8 shadow-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-emerald-500 text-white font-black px-4 py-1 rounded-full text-xs">${ch.title}</span>
+                            <button onclick="speakText(\`${ch.title}. ${ch.q}\`)" class="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                                <i class="fas fa-volume-up"></i> Suara
+                            </button>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-black text-slate-800 mb-5">${ch.q}</h3>
+                        <div class="space-y-3">
+                            ${ch.opts.map((opt, idx) => `
+                                <button onclick="answerGame3(${idx})" class="btn-3d w-full bg-sky-50 hover:bg-sky-500 hover:text-white border-2 border-sky-300 text-slate-800 font-extrabold py-3.5 px-5 rounded-2xl text-left text-base transition">
+                                    ${String.fromCharCode(65 + idx)}. ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerGame3(selected) {
+            const ch = game3Challenges[g3Level];
+            if (selected === ch.ans) {
+                playSFX('correct');
+                g3Stars++;
+                g3Level++;
+                renderGame3();
+            } else {
+                playSFX('wrong');
+                speakText('Belum tepat! Ayo pikirkan kembali jawaban terbaikmu.');
+                showFeedbackModal('error', 'Coba Lagi ya!', 'Jawabanmu belum tepat untuk membuka level berikutnya.');
+            }
+        }
+
+        /* =========================================================================
+           11. RENDER MENU LKPD (LEMBAR KERJA PESERTA DIDIK INTERAKTIF & CETAK)
+           ========================================================================= */
+        function renderLKPDPage() {
+            const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            const main = document.getElementById('main-container');
+
+            main.innerHTML = `
+                <div class="py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4 no-print">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <button onclick="speakText('Lembar Kerja Peserta Didik: Petualangan Wujud Zat. Silakan isi nama, kelas, lalu kerjakan Kegiatan 1 sampai Kegiatan 4. Setelah selesai, klik Periksa Jawaban atau Cetak LKPD.')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-volume-up"></i> Petunjuk LKPD
+                        </button>
+                    </div>
+
+                    <div class="print-container bg-white border-4 border-rose-400 rounded-3xl p-5 md:p-8 shadow-xl space-y-6">
+                        <!-- Kop LKPD -->
+                        <div class="text-center border-b-4 border-double border-slate-300 pb-4">
+                            <span class="bg-rose-100 text-rose-700 font-black px-4 py-1 rounded-full text-xs">IPAS KELAS III SD (FASE B) • SD NEGERI 3 KELATEN</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-2">LKPD PETUALANGAN WUJUD ZAT</h2>
+                            <p class="text-xs md:text-sm font-bold text-slate-500">Guru Kelas: Oky Susanti, S.Pd.</p>
+                        </div>
+
+                        <!-- 1. Identitas Siswa -->
+                        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl p-4">
+                            <h3 class="font-black text-sky-800 mb-3">1. Identitas Peserta Didik</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-xs font-extrabold text-slate-600 mb-1">Nama Lengkap:</label>
+                                    <input type="text" id="lkpd-nama" value="${appState.studentName}" placeholder="Ketik namamu di sini..." class="w-full border-2 border-sky-300 rounded-xl px-3 py-2 font-bold text-sm focus:outline-none focus:border-sky-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-extrabold text-slate-600 mb-1">Kelas:</label>
+                                    <input type="text" id="lkpd-kelas" value="${appState.studentClass}" class="w-full border-2 border-sky-300 rounded-xl px-3 py-2 font-bold text-sm focus:outline-none focus:border-sky-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-extrabold text-slate-600 mb-1">Tanggal:</label>
+                                    <input type="text" id="lkpd-tanggal" value="${today}" class="w-full border-2 border-sky-300 rounded-xl px-3 py-2 font-bold text-sm focus:outline-none focus:border-sky-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2 & 3. Tujuan & Petunjuk -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4">
+                                <h3 class="font-black text-amber-800 mb-1">2. Tujuan Pembelajaran</h3>
+                                <p class="text-xs md:text-sm font-semibold text-slate-700">Peserta didik mampu mengelompokkan benda padat, cair, dan gas serta menjelaskan proses perubahan wujud zat dalam kehidupan sehari-hari.</p>
+                            </div>
+                            <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4">
+                                <h3 class="font-black text-emerald-800 mb-1">3. Petunjuk Pengerjaan</h3>
+                                <p class="text-xs md:text-sm font-semibold text-slate-700">Isilah setiap kolom kegiatan secara teliti, lalu gunakan tombol <b>Periksa Jawaban</b>, <b>Simpan</b>, atau <b>Cetak LKPD</b> di bagian bawah.</p>
+                            </div>
+                        </div>
+
+                        <!-- 4. Kegiatan 1: Mengelompokkan 15 Benda -->
+                        <div class="border-2 border-slate-200 rounded-2xl p-4">
+                            <h3 class="font-black text-slate-800 mb-2">4. Kegiatan 1: Mengelompokkan 15 Benda ke Kategori Padat, Cair, dan Gas</h3>
+                            <p class="text-xs font-bold text-slate-500 mb-3">Pilih wujud zat yang tepat untuk masing-masing benda di bawah ini:</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                                ${fifteenItems.map((item, idx) => `
+                                    <div class="flex items-center justify-between bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl">
+                                        <span class="font-bold text-sm">${idx + 1}. ${item.emoji} ${item.name}</span>
+                                        <select id="lkpd-k1-${item.id}" class="border-2 border-sky-300 rounded-lg px-2 py-1 text-xs font-extrabold bg-white">
+                                            <option value="">-- Pilih --</option>
+                                            <option value="Padat">Padat</option>
+                                            <option value="Cair">Cair</option>
+                                            <option value="Gas">Gas</option>
+                                        </select>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- 5. Kegiatan 2: Melengkapi Tabel Perubahan Wujud Zat -->
+                        <div class="border-2 border-slate-200 rounded-2xl p-4 overflow-x-auto">
+                            <h3 class="font-black text-slate-800 mb-2">5. Kegiatan 2: Melengkapi Tabel Pengamatan Perubahan Wujud Zat</h3>
+                            <table class="w-full text-left text-xs md:text-sm border-collapse">
+                                <thead>
+                                    <tr class="bg-sky-600 text-white">
+                                        <th class="p-2.5 border border-sky-700">No</th>
+                                        <th class="p-2.5 border border-sky-700">Peristiwa di Sekitar Kita</th>
+                                        <th class="p-2.5 border border-sky-700">Perubahan Wujud</th>
+                                        <th class="p-2.5 border border-sky-700">Nama Perubahan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="p-2 border font-bold">1</td>
+                                        <td class="p-2 border font-semibold">Es batu dibiarkan di piring terbuka</td>
+                                        <td class="p-2 border font-semibold">Padat ➔ Cair</td>
+                                        <td class="p-2 border">
+                                            <select id="lkpd-t1" class="w-full border rounded-lg p-1.5 font-bold">
+                                                <option value="">-- Pilih --</option>
+                                                <option value="Mencair">Mencair</option>
+                                                <option value="Membeku">Membeku</option>
+                                                <option value="Menguap">Menguap</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border font-bold">2</td>
+                                        <td class="p-2 border font-semibold">Air dimasukkan ke dalam freezer</td>
+                                        <td class="p-2 border font-semibold">Cair ➔ Padat</td>
+                                        <td class="p-2 border">
+                                            <select id="lkpd-t2" class="w-full border rounded-lg p-1.5 font-bold">
+                                                <option value="">-- Pilih --</option>
+                                                <option value="Mencair">Mencair</option>
+                                                <option value="Membeku">Membeku</option>
+                                                <option value="Mengembun">Mengembun</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border font-bold">3</td>
+                                        <td class="p-2 border font-semibold">Air direbus hingga muncul uap air</td>
+                                        <td class="p-2 border font-semibold">Cair ➔ Gas</td>
+                                        <td class="p-2 border">
+                                            <select id="lkpd-t3" class="w-full border rounded-lg p-1.5 font-bold">
+                                                <option value="">-- Pilih --</option>
+                                                <option value="Menyublim">Menyublim</option>
+                                                <option value="Menguap">Menguap</option>
+                                                <option value="Mengkristal">Mengkristal</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border font-bold">4</td>
+                                        <td class="p-2 border font-semibold">Titik air muncul di luar gelas berisi es</td>
+                                        <td class="p-2 border font-semibold">Gas ➔ Cair</td>
+                                        <td class="p-2 border">
+                                            <select id="lkpd-t4" class="w-full border rounded-lg p-1.5 font-bold">
+                                                <option value="">-- Pilih --</option>
+                                                <option value="Mengembun">Mengembun</option>
+                                                <option value="Membeku">Membeku</option>
+                                                <option value="Mencair">Mencair</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-2 border font-bold">5</td>
+                                        <td class="p-2 border font-semibold">Kapur barus di lemari mengecil menjadi gas</td>
+                                        <td class="p-2 border font-semibold">Padat ➔ Gas</td>
+                                        <td class="p-2 border">
+                                            <select id="lkpd-t5" class="w-full border rounded-lg p-1.5 font-bold">
+                                                <option value="">-- Pilih --</option>
+                                                <option value="Menyublim">Menyublim</option>
+                                                <option value="Mengkristal">Mengkristal</option>
+                                                <option value="Menguap">Menguap</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 6. Kegiatan 3: 5 Pertanyaan Pemahaman -->
+                        <div class="border-2 border-slate-200 rounded-2xl p-4 space-y-3">
+                            <h3 class="font-black text-slate-800">6. Kegiatan 3: Menjawab Lima Pertanyaan Pemahaman</h3>
+                            <div>
+                                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1">1) Sebutkan 3 contoh benda padat yang ada di ruang kelasmu!</label>
+                                <input type="text" id="lkpd-q1" placeholder="Ketik jawabanmu..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1">2) Bagaimana bentuk air jika dipindahkan dari botol ke dalam mangkuk?</label>
+                                <input type="text" id="lkpd-q2" placeholder="Ketik jawabanmu..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1">3) Mengapa balon yang ditiup bisa mengembang besar?</label>
+                                <input type="text" id="lkpd-q3" placeholder="Ketik jawabanmu..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1">4) Apa yang menyebabkan es batu bisa mencair menjadi air?</label>
+                                <input type="text" id="lkpd-q4" placeholder="Ketik jawabanmu..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold">
+                            </div>
+                            <div>
+                                <label class="block text-xs md:text-sm font-bold text-slate-700 mb-1">5) Sebutkan 1 contoh peristiwa mengembun dalam kehidupan sehari-hari!</label>
+                                <input type="text" id="lkpd-q5" placeholder="Ketik jawabanmu..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2 text-sm font-semibold">
+                            </div>
+                        </div>
+
+                        <!-- 7. Kegiatan 4: Menuliskan Kesimpulan -->
+                        <div class="border-2 border-slate-200 rounded-2xl p-4">
+                            <h3 class="font-black text-slate-800 mb-1">7. Kegiatan 4: Menuliskan Kesimpulan Belajar</h3>
+                            <p class="text-xs font-bold text-slate-500 mb-2">Tuliskan apa saja yang sudah kamu pelajari hari ini tentang wujud zat dan perubahannya:</p>
+                            <textarea id="lkpd-kesimpulan" rows="3" placeholder="Hari ini saya belajar bahwa wujud zat ada tiga yaitu..." class="w-full border-2 border-slate-300 rounded-xl p-3 text-sm font-semibold"></textarea>
+                        </div>
+
+                        <!-- Hasil Pemeriksaan Otomatis -->
+                        <div id="lkpd-check-result" class="hidden bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4 font-bold text-emerald-900 text-sm"></div>
+
+                        <!-- Tombol Aksi LKPD -->
+                        <div class="flex flex-wrap gap-3 justify-center pt-2 no-print">
+                            <button onclick="saveLKPD()" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-save"></i> SIMPAN JAWABAN
+                            </button>
+                            <button onclick="checkLKPD()" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-check-double"></i> PERIKSA JAWABAN
+                            </button>
+                            <button onclick="window.print()" class="btn-3d bg-amber-500 hover:bg-amber-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-print"></i> CETAK LKPD
+                            </button>
+                            <button onclick="resetLKPD()" class="btn-3d bg-rose-500 hover:bg-rose-600 text-white font-extrabold px-5 py-3 rounded-2xl flex items-center gap-2">
+                                <i class="fas fa-redo"></i> ULANGI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveLKPD() {
+            playSFX('click');
+            const nama = document.getElementById('lkpd-nama').value.trim();
+            if (nama) {
+                appState.studentName = nama;
+                saveState();
+            }
+            speakText('Jawaban LKPD berhasil disimpan!');
+            showFeedbackModal('success', 'Tersimpan! 💾', 'Jawaban LKPD kamu sudah tersimpan. Kamu bisa memeriksa atau mencetaknya sekarang.');
+        }
+
+        function checkLKPD() {
+            let correctK1 = 0;
+            fifteenItems.forEach(item => {
+                const el = document.getElementById('lkpd-k1-' + item.id);
+                if (el && el.value === item.type) {
+                    correctK1++;
+                    el.classList.add('bg-emerald-100', 'border-emerald-500');
+                } else if (el) {
+                    el.classList.add('bg-rose-100', 'border-rose-400');
+                }
+            });
+
+            const tableAns = [
+                { id: 'lkpd-t1', ans: 'Mencair' },
+                { id: 'lkpd-t2', ans: 'Membeku' },
+                { id: 'lkpd-t3', ans: 'Menguap' },
+                { id: 'lkpd-t4', ans: 'Mengembun' },
+                { id: 'lkpd-t5', ans: 'Menyublim' }
+            ];
+            let correctT = 0;
+            tableAns.forEach(t => {
+                const el = document.getElementById(t.id);
+                if (el && el.value === t.ans) {
+                    correctT++;
+                    el.classList.add('bg-emerald-100', 'border-emerald-500');
+                } else if (el) {
+                    el.classList.add('bg-rose-100', 'border-rose-400');
+                }
+            });
+
+            const resBox = document.getElementById('lkpd-check-result');
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = `
+                📋 <b>Hasil Pemeriksaan Otomatis:</b><br>
+                • Kegiatan 1 (Pengelompokan 15 Benda): <b>${correctK1} dari 15 benar</b>.<br>
+                • Kegiatan 2 (Tabel Perubahan Wujud): <b>${correctT} dari 5 benar</b>.<br>
+                • Kegiatan 3 & 4 (Isian & Kesimpulan): Siap diperiksa oleh Ibu Guru Oky Susanti, S.Pd.
+            `;
+
+            if (correctK1 >= 12 && correctT >= 4) {
+                playSFX('correct');
+                addStars(5, 'lkpd');
+                confetti({ particleCount: 70, spread: 70 });
+                speakText(`Hebat! Kamu menjawab benar ${correctK1} dari 15 benda dan ${correctT} dari 5 tabel perubahan wujud.`);
+            } else {
+                playSFX('click');
+                speakText(`Kamu menjawab benar ${correctK1} benda dan ${correctT} tabel. Perbaiki kotak yang berwarna merah muda lalu periksa lagi ya!`);
+            }
+        }
+
+        function resetLKPD() {
+            playSFX('click');
+            renderLKPDPage();
+        }
+
+        /* =========================================================================
+           12. RENDER MENU EVALUASI (10 SOAL PILIHAN GANDA & SKOR OTOMATIS)
+           ========================================================================= */
+        let evalStarted = false;
+        let evalIndex = 0;
+        let evalUserAnswers = new Array(10).fill(null);
+        let evalCheckedCurrent = false;
+
+        function renderEvaluasiPage() {
+            const main = document.getElementById('main-container');
+
+            // Tahap 1: Input Nama Sebelum Mulai Evaluasi
+            if (!evalStarted) {
+                main.innerHTML = `
+                    <div class="py-4 max-w-xl mx-auto">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 text-white font-bold px-4 py-2 rounded-2xl text-sm mb-4">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <div class="bg-white border-4 border-amber-400 rounded-3xl p-6 md:p-8 shadow-xl text-center">
+                            <div class="text-6xl mb-3">📝🏆</div>
+                            <h2 class="text-2xl md:text-3xl font-black text-slate-800 mb-2">EVALUASI AKHIR PEMBELAJARAN</h2>
+                            <p class="text-sm text-slate-600 font-bold mb-5">10 Soal Pilihan Ganda • Materi Wujud Zat & Perubahannya • Nilai Maksimal 100</p>
+
+                            <div class="text-left bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl mb-5">
+                                <label class="block text-xs font-extrabold text-amber-900 mb-1">Masukkan Nama Lengkapmu Terlebih Dahulu:</label>
+                                <input type="text" id="eval-student-name" value="${appState.studentName}" placeholder="Contoh: Budi Santoso" class="w-full border-2 border-amber-400 rounded-xl px-4 py-3 font-extrabold text-base focus:outline-none">
+                            </div>
+
+                            <button onclick="beginEvaluation()" class="btn-3d w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-lg py-4 rounded-2xl">
+                                <i class="fas fa-play-circle mr-1"></i> MULAI EVALUASI
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Tahap 3: Halaman Hasil Akhir Otomatis
+            if (evalIndex >= evalQuestions.length) {
+                let correctCount = 0;
+                evalQuestions.forEach((q, i) => {
+                    if (evalUserAnswers[i] === q.answer) correctCount++;
+                });
+                const wrongCount = evalQuestions.length - correctCount;
+                const finalScore = correctCount * 10;
+
+                let predicate = '';
+                let badgeColor = '';
+                let motivation = '';
+
+                if (finalScore >= 90) {
+                    predicate = 'Sangat Baik 🌟';
+                    badgeColor = 'bg-emerald-500';
+                    motivation = 'Luar biasa! Kamu menguasai materi Wujud Zat dengan sangat baik. Pertahankan prestasimu ya, Ilmuwan Cilik!';
+                } else if (finalScore >= 80) {
+                    predicate = 'Baik 👍';
+                    badgeColor = 'bg-sky-500';
+                    motivation = 'Bagus sekali! Pemahamanmu sudah baik. Teruslah berlatih agar meraih nilai sempurna 100!';
+                } else if (finalScore >= 70) {
+                    predicate = 'Cukup 😊';
+                    badgeColor = 'bg-amber-500';
+                    motivation = 'Cukup baik! Ayo baca kembali menu Materi dan coba Simulasi agar pemahamanmu semakin kuat.';
+                } else {
+                    predicate = 'Perlu Bimbingan 💪';
+                    badgeColor = 'bg-rose-500';
+                    motivation = 'Jangan menyerah ya! Ayo pelajari kembali materi benda padat, cair, dan gas bersama Ibu Guru, lalu ulangi evaluasinya.';
+                }
+
+                if (finalScore > appState.evalBestScore) {
+                    appState.evalBestScore = finalScore;
+                }
+                addStars(Math.max(2, Math.floor(finalScore / 20)), 'evaluasi');
+
+                if (finalScore >= 70) {
+                    playSFX('win');
+                    confetti({ particleCount: 100, spread: 80 });
+                }
+
+                speakText(`Evaluasi selesai! Nama siswa: ${appState.studentName || 'Siswa Hebat'}. Skor kamu ${finalScore}, dengan predikat ${predicate}. ${motivation}`);
+
+                main.innerHTML = `
+                    <div class="py-3 max-w-2xl mx-auto">
+                        <div class="print-container bg-white border-4 border-amber-400 rounded-3xl p-6 md:p-8 shadow-2xl text-center">
+                            <span class="bg-sky-100 text-sky-800 font-black px-4 py-1 rounded-full text-xs">HASIL EVALUASI IPAS KELAS 3 SD</span>
+                            <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-2 mb-4">LAPORAN HASIL BELAJAR</h2>
+
+                            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 mb-5 text-left space-y-2 text-sm md:text-base">
+                                <p><b>Nama Siswa:</b> <span class="text-sky-700 font-extrabold">${appState.studentName || 'Peserta Didik Kelas 3'}</span></p>
+                                <p><b>Sekolah:</b> SD Negeri 3 Kelaten</p>
+                                <p><b>Jumlah Jawaban Benar:</b> <span class="text-emerald-600 font-black">${correctCount} Soal</span></p>
+                                <p><b>Jumlah Jawaban Salah:</b> <span class="text-rose-600 font-black">${wrongCount} Soal</span></p>
+                            </div>
+
+                            <div class="my-4">
+                                <p class="text-xs font-extrabold text-slate-500 uppercase">Skor Akhir</p>
+                                <div class="text-6xl font-black text-amber-500 my-1">${finalScore}</div>
+                                <span class="inline-block ${badgeColor} text-white font-black px-5 py-1.5 rounded-full text-base shadow">
+                                    Predikat: ${predicate}
+                                </span>
+                            </div>
+
+                            <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 my-5 font-bold text-slate-700 text-sm md:text-base">
+                                💬 "${motivation}"
+                            </div>
+
+                            <div class="flex flex-wrap justify-center gap-3 no-print">
+                                <button onclick="restartEvaluation()" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-extrabold px-6 py-3 rounded-2xl flex items-center gap-2">
+                                    <i class="fas fa-redo"></i> Ulangi Evaluasi
+                                </button>
+                                <button onclick="window.print()" class="btn-3d bg-sky-500 hover:bg-sky-600 text-white font-extrabold px-6 py-3 rounded-2xl flex items-center gap-2">
+                                    <i class="fas fa-print"></i> Cetak Hasil
+                                </button>
+                                <button onclick="navigateTo('menu')" class="btn-3d bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold px-6 py-3 rounded-2xl flex items-center gap-2">
+                                    <i class="fas fa-home"></i> Menu Utama
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Tahap 2: Tampilan Soal Evaluasi 1 - 10
+            const q = evalQuestions[evalIndex];
+            const chosen = evalUserAnswers[evalIndex];
+
+            main.innerHTML = `
+                <div class="py-2 max-w-3xl mx-auto">
+                    <!-- Indikator Nomor Soal -->
+                    <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
+                        <span class="font-extrabold text-sm text-slate-700">Peserta: <span class="text-sky-700">${appState.studentName || 'Siswa'}</span></span>
+                        <div class="flex flex-wrap gap-1">
+                            ${evalQuestions.map((_, i) => `
+                                <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${i === evalIndex ? 'bg-sky-600 text-white ring-2 ring-sky-300' : evalUserAnswers[i] !== null ? 'bg-emerald-500 text-white' : 'bg-white border border-slate-300 text-slate-500'}">
+                                    ${i + 1}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="bg-white border-4 border-sky-400 rounded-3xl p-6 md:p-8 shadow-xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="bg-sky-100 text-sky-800 font-black px-3 py-1 rounded-full text-xs">SOAL ${evalIndex + 1} DARI 10</span>
+                            <button onclick="speakText(\`${q.q}. ${q.options.join('. ')}\`)" class="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                                <i class="fas fa-volume-up"></i> Bacakan Soal
+                            </button>
+                        </div>
+
+                        <h3 class="text-lg md:text-xl font-black text-slate-800 mb-5 leading-relaxed">${q.q}</h3>
+
+                        <div class="space-y-3">
+                            ${q.options.map((opt, idx) => {
+                                let btnClass = 'bg-slate-50 hover:bg-sky-50 border-2 border-slate-200 text-slate-800';
+                                if (evalCheckedCurrent) {
+                                    if (idx === q.answer) {
+                                        btnClass = 'bg-emerald-500 border-2 border-emerald-600 text-white';
+                                    } else if (idx === chosen && chosen !== q.answer) {
+                                        btnClass = 'bg-rose-500 border-2 border-rose-600 text-white';
+                                    }
+                                }
+                                return `
+                                    <button onclick="selectEvalOption(${idx})" ${evalCheckedCurrent ? 'disabled' : ''} class="btn-3d w-full ${btnClass} font-extrabold py-3.5 px-5 rounded-2xl text-left text-base transition">
+                                        ${opt}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <!-- Umpan Balik Langsung Setelah Menjawab -->
+                        ${evalCheckedCurrent ? `
+                            <div class="mt-5 p-4 rounded-2xl ${chosen === q.answer ? 'bg-emerald-50 border-2 border-emerald-400 text-emerald-900' : 'bg-rose-50 border-2 border-rose-400 text-rose-900'}">
+                                <p class="font-black text-base mb-1">
+                                    ${chosen === q.answer ? '🌟 HEBAT! Jawabanmu Benar (+10 Poin)' : '💡 Kurang Tepat! Perhatikan Penjelasannya:'}
+                                </p>
+                                <p class="text-sm font-semibold">${q.explanation}</p>
+                            </div>
+                            <div class="mt-5 text-right">
+                                <button onclick="nextEvalQuestion()" class="btn-3d bg-sky-600 hover:bg-sky-700 text-white font-black px-6 py-3 rounded-2xl">
+                                    ${evalIndex < 9 ? 'Soal Berikutnya ➔' : 'Lihat Hasil Akhir 🏆'}
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function beginEvaluation() {
+            const nameInput = document.getElementById('eval-student-name').value.trim();
+            if (!nameInput) {
+                playSFX('wrong');
+                speakText('Silakan ketik nama lengkapmu terlebih dahulu sebelum memulai evaluasi.');
+                showFeedbackModal('error', 'Nama Belum Diisi', 'Ketik nama lengkapmu pada kotak yang tersedia ya!');
+                return;
+            }
+            playSFX('click');
+            appState.studentName = nameInput;
+            saveState();
+            evalStarted = true;
+            evalIndex = 0;
+            evalUserAnswers = new Array(10).fill(null);
+            evalCheckedCurrent = false;
+            renderEvaluasiPage();
+        }
+
+        function selectEvalOption(idx) {
+            if (evalCheckedCurrent) return;
+            evalUserAnswers[evalIndex] = idx;
+            evalCheckedCurrent = true;
+            const q = evalQuestions[evalIndex];
+
+            if (idx === q.answer) {
+                playSFX('correct');
+                confetti({ particleCount: 40, spread: 50, origin: { y: 0.7 } });
+                speakText('Hebat! Jawabanmu benar. ' + q.explanation);
+            } else {
+                playSFX('wrong');
+                speakText('Belum tepat. ' + q.explanation);
+            }
+            renderEvaluasiPage();
+        }
+
+        function nextEvalQuestion() {
+            playSFX('click');
+            stopSpeech();
+            evalIndex++;
+            evalCheckedCurrent = false;
+            renderEvaluasiPage();
+        }
+
+        function restartEvaluation() {
+            playSFX('click');
+            evalStarted = false;
+            evalIndex = 0;
+            evalUserAnswers = new Array(10).fill(null);
+            evalCheckedCurrent = false;
+            renderEvaluasiPage();
+        }
+
+        /* =========================================================================
+           13. RENDER MENU PENGEMBANG
+           ========================================================================= */
+        function renderPengembangPage() {
+            const main = document.getElementById('main-container');
+            const quote = "Belajar IPAS menjadi menyenangkan ketika kita mau mengamati, mencoba, dan menemukan sendiri.";
+
+            main.innerHTML = `
+                <div class="py-2 max-w-3xl mx-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <button onclick="navigateTo('menu')" class="btn-3d bg-slate-600 hover:bg-slate-700 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Menu
+                        </button>
+                        <button onclick="speakText('Profil Pengembang Media Pembelajaran Interaktif. Nama: Oky Susanti, S.Pd. Jabatan: Guru Sekolah Dasar. Instansi: SD Negeri 3 Kelaten. Mata Pelajaran: IPAS, Materi Wujud Zat, Fase B Kelas 3, Tahun 2026. ${quote}')" class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 rounded-2xl text-sm flex items-center gap-2">
+                            <i class="fas fa-volume-up"></i> Bacakan Profil
+                        </button>
+                    </div>
+
+                    <div class="bg-white border-4 border-cyan-400 rounded-3xl p-6 md:p-8 shadow-xl text-center">
+                        <div class="w-28 h-28 mx-auto bg-gradient-to-br from-sky-400 to-cyan-600 rounded-full flex items-center justify-center text-white text-5xl shadow-lg border-4 border-white mb-4">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <span class="bg-cyan-100 text-cyan-800 font-black px-4 py-1 rounded-full text-xs">PROFIL PENGEMBANG MPI</span>
+                        <h2 class="text-2xl md:text-3xl font-black text-slate-800 mt-2">Oky Susanti, S.Pd.</h2>
+                        <p class="text-sky-600 font-extrabold text-base mb-6">Guru Sekolah Dasar • SD Negeri 3 Kelaten</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left max-w-xl mx-auto mb-6">
+                            <div class="bg-sky-50 border border-sky-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Nama Pengembang</span>
+                                <span class="font-extrabold text-slate-800">Oky Susanti, S.Pd.</span>
+                            </div>
+                            <div class="bg-sky-50 border border-sky-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Jabatan</span>
+                                <span class="font-extrabold text-slate-800">Guru Sekolah Dasar</span>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Satuan Pendidikan</span>
+                                <span class="font-extrabold text-slate-800">SD Negeri 3 Kelaten</span>
+                            </div>
+                            <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Mata Pelajaran & Materi</span>
+                                <span class="font-extrabold text-slate-800">IPAS • Wujud Zat</span>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Fase / Kelas</span>
+                                <span class="font-extrabold text-slate-800">Fase B / Kelas III (Tiga)</span>
+                            </div>
+                            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl">
+                                <span class="text-xs font-bold text-slate-500 block">Tahun Pengembangan</span>
+                                <span class="font-extrabold text-slate-800">2026</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-amber-100 via-yellow-50 to-orange-100 border-2 border-amber-300 rounded-2xl p-5 max-w-xl mx-auto">
+                            <p class="text-base md:text-lg font-black text-amber-900 italic">
+                                "${quote}"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /* =========================================================================
+           14. INISIALISASI SAAT HALAMAN SELESAI DIMUAT
+           ========================================================================= */
+        window.onload = function () {
+            initVoices();
+            loadState();
+            renderWelcomePage();
+        };
+    </script>
+</body>
+</html>
